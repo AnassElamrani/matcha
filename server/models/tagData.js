@@ -30,4 +30,7 @@ module.exports = class Tag {
     static cmpIdTag(idTag){
         return db.execute('SELECT * FROM tag_user WHERE tag_id = ?', [idTag]);
     }
+    static getAllTag(){
+        return db.execute('SELECT * FROM tag');
+    }
 }

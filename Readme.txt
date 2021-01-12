@@ -6,3 +6,11 @@
 4 - mv client test && ./react.sh // copy folder src pubilc .gitignore react.sh to new folder client
 5 - cd ./client && ./react.sh
 6 - cd ./server && npm run dev // to launch package currentlly...
+
+
+eval $(docker-machine env default)
+
+./docker_imgs.sh && cd server && ./node.sh && cd .. && mv client test && ./react.sh && cp ./test/react.sh ./client && cd client && ./react.sh && cd ../server && npm run dev
+
+
+{mv client test & ./react.sh & ./client/react.sh & ./server/npm run dev}

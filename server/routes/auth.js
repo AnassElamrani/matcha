@@ -1,4 +1,4 @@
-const authVrfy = require('../controllers/autMiddleware');
+const authVrfy = require('../middleware/autMiddleware');
 
 const express = require('express');
 const route = express.Router();

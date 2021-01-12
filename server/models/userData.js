@@ -18,6 +18,15 @@ module.exports = class User {
         , [this.email, this.userName, this.firstName, this.lastName, this.password, this.vkey, this.gender, this.bio]);
     };
     
+    static oauthRegister(oauth, email, userName, firstName, lastName, password, vkey, gender, bio)
+    {
+        return db.execute('INSERT INTO users(oauth_id, email, userName, firstName, lastName, password, vkey, gender, bio) VALUES (?, ? ,?, ?, ? ,? ,?, ?, ?)'
+        , [oauth, email, userName, firstName, lastName, password, vkey, gender, bio]);
+    }
+    static oauthFindUser(oauth_id){
+     return db.execute('SELECT oauth_id FROM users WHERE users.oauth_id = ? limit 1', [oauth_id]);
+    }
+
     static fetchAll(cb) {
         return db.execute('SELECT * FROM users');
     };
@@ -56,8 +65,6 @@ module.exports = class User {
         return db.execute('SELECT vkey FROM users WHERE vkey = ?', [vkey]);
     }
 
-
-
     static validateUser(vkey){
         return db.execute('UPDATE users SET verify = 1 WHERE vkey = ?', [vkey]);
     }
@@ -68,8 +75,12 @@ module.exports = class User {
 
     // filling profil
 
-    static fillProfilUpdate(gender, bio, id){
-        return db.execute('UPDATE users SET  gender = ?,bio = ? WHERE id = ?', [gender, bio, id])
+    static fillProfilUpdate(data){
+        return db.execute("UPDATE users SET  gender = ?,bio = ? WHERE id = ?", [
+          data.gender,
+          data.bio,
+          data.id,
+        ]);
     }
 
 
@@ -79,5 +90,12 @@ module.exports = class User {
 
     static delete(id){
         return db.execute('DELETE FROM products WHERE products.id = ?', [id]);
+    }
+
+    static UpdateFirstInfo(data){
+        return db.execute(
+          "UPDATE users SET email = ?, userName = ?, firstName= ?, lastName= ? WHERE id = ?",
+          [data.email, data.userName, data.firstName, data.lastName, data.id]
+        );
     }
 }

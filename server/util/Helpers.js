@@ -23,7 +23,7 @@ exports.sendmail = (data) => {
         service: 'gmail',
         auth: {
             user: 'hassanseffiani@gmail.com',//replace with your email
-            pass: 'Hseffiani1998'//replace with your password
+            pass: 'Exact666ringer-&-'//replace with your password
         }
     });
     

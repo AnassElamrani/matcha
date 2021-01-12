@@ -14,6 +14,8 @@ exports.validationInput = (req, res, next) => {
     (req.body.password) ? ((regExpPassword.test(req.body.password)) ? "" : dataErr.validPassErr = "Enter a valid password") : "";
     (req.body.cnfrmPassword) ? ((regExpPassword.test(req.body.cnfrmPassword)) ? "" : dataErr.validCnfpErr = "Enter a valid password") : "";
     (req.body.newPassword) ? ((regExpPassword.test(req.body.newPassword)) ? "" : dataErr.validNewpErr = "Enter a valid password") : "";
+    if (req.body.userName === "") dataErr.validUserNameErr = "Enter a valid username"
+    if (req.body.password === "") dataErr.validPassErr = "Enter a valid password"
 
     if (regExpName.test(req.body.firstName) && regExpLast.test(req.body.lastName) && regExpUserName.test(req.body.userName) && regExpEmail.test(req.body.email) && regExpPassword.test(req.body.password) && regExpPassword.test(req.body.cnfrmPassword) && regExpPassword.test(req.body.newPassword))
         next();

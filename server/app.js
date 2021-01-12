@@ -4,6 +4,8 @@ const errRoutes = require("./routes/error");
 const homeRoutes = require("./routes/base");
 const cookieParser = require('cookie-parser');
 const authRoutes = require("./routes/auth");
+const pss = require('./util/passport.js');
+const passport = require('passport');
 
 
 const cors = require("cors");
@@ -11,7 +13,11 @@ const cors = require("cors");
 const express = require('express');
 const app = express();
 app.use(express.json());
-app.use(cors());
+var corsOptions = {
+    origin: 'http://localhost:3000', 
+    credentials: true
+}
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 //bodyParser
@@ -27,7 +33,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // parse application/json
 app.use(bodyParser.json());
-
+app.use(passport.initialize());
 app.use(authRoutes);
 app.use(homeRoutes);
 app.use(userRoutes);

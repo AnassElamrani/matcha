@@ -1,50 +1,150 @@
 import React, { Component } from 'react'
 import Axios from 'axios'
+import "../../start/styles.css"
+import IntraSvg from "../../start/IntraSvg";
 import {
-  Chip,
-  FormControlLabel,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Hidden,
+  Icon,
+  LockOutlined,
+  Copyright,
   Checkbox,
-  Button,
-  Grid,
-  TextField,
-  Typography,
+  FormControlLabel,
+  LockOutlinedIcon,
   Avatar,
-  Container,
   CssBaseline,
-  // Link as Links,
-} from '@material-ui/core'
+  Button,
+  TextField,
+  Grid,
+  Typography,
+  Box,
+  Link
+} from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles'
-import { LockOutlined } from '@material-ui/icons'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import ImgIcons from '../helpers/icon'
-import FacebookIcon from '@material-ui/icons/Facebook'
-// import TwitterIcon from '@material-ui/icons/Twitter'
+import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import history from '../../history/history'
 import Size from '../helpers/size'
 
-const useStyles = (theme) => ({
-  copy: {
-    marginBottom: theme.spacing(8),
+const styles = theme => ({
+  buttonOauth: {
+    margin: theme.spacing(1),
+    color: "grey",
+    border: "0",
+    backgroundColor: "#f7f7f7",
+    textTransform: "capitalize"
   },
+  intra: {
+    fontFamily: "Comfortaa",
+    fontSize: "12px",
+    margin: theme.spacing(1),
+    color: "#383838",
+    // border: "1px solid lightgray",
+    backgroundColor: "#f7f7f7",
+    textTransform: "capitalize"
+  },
+  oauth: {
+    display: "flex",
+    flexDirection: "row",
+    margin: "15px"
+  },
+  diva: {
+    // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    height: "100vh",
+    overflowY: "hidden"
+  },
+  container: {
+    // height: 100
+    fontFamily: "Comfortaa"
+  },
+  grides: {
+    height: 100
+  },
+  boxes: {
+    // border: "1px black solid",
+    height: "100vh"
+  },
+  img: {
+    // object-fit: 'cover',
+    width: "100%",
+    height: "100%"
+  },
+  Gflex: {
+    display: "flex",
+    flexDirection: "column"
+  },
+
   paper: {
-    marginTop: theme.spacing(6),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    margin: theme.spacing(6, 4),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: "#5A9798"
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    width: "70%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 2)
   },
-  spaceGrid: {},
-})
+  hadik: {
+    // minWidth: "100%"
+  },
+  top: {
+    backgroundColor: "white",
+    height: "14%",
+    margin: 0
+    // border: "1px solid gray"
+  },
+  matcha: {
+    color: "#0d0c22",
+    textAlign: "center",
+    fontFamily: "Comfortaa"
+  },
+  find: {
+    color: "#1e1731",
+    textAlign: "center",
+    fontFamily: "Comfortaa"
+  },
+  or: {
+    width: "80%",
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    /* background-color: lightgray; */
+    color: "#9c9c9c"
+  },
+  leftline: {
+    position: "absolute",
+    height: "1px",
+    width: "36%",
+    left: "55%",
+    top: "7px",
+    backgroundColor: "lightgray"
+  },
+
+  rightline: {
+    position: "absolute",
+    height: "1px",
+    width: "36%",
+    right: "55%",
+    top: "7px",
+    backgroundColor: "lightgray"
+  },
+  boxeflex: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
+  }
+});
 
 class Signup extends Component {
   state = {
@@ -122,195 +222,219 @@ class Signup extends Component {
             ''
           )
     const { classes } = this.props
+    const img = {
+      // src: "https://i.ibb.co/gSMgwQY/Group-1.png"
+      src: "https://i.ibb.co/Dty8vRF/420e32dfc9a3a1778b273bd7310eb364.webp"
+      // src : "https://i.ibb.co/BBbJVq8/dribble-4-15-4x.webp"
+      // src : "https://i.ibb.co/f8xZsbq/dribble-4-11-4x.webp"
+    };
     return (
-      <Size>
-        <Container className={classes.copy} component='main' maxWidth='xs'>
-          <CssBaseline />
+<div className={classes.diva}>
+    <Grid container className={classes.container}>
+      <Hidden only={["xs", "sm"]}>
+        <Grid item className={classes.Gflex} md={4}>
+          <Box bgcolor="#ffffff" className={classes.boxeflex} flexGrow={2}>
+          </Box>
+          <Box flexGrow={8}>
+            <img className={classes.img} src={img.src} alt="img" />
+          </Box>
+          <Box flexGrow={3} bgcolor="#ffffff" className={classes.boxeflex}>
+          </Box>
+        </Grid>
+      </Hidden>
+      <Grid container item md={8}>
+        <Hidden only="xs">
+          <Grid className={classes.top} container item>
+            {/* <Box>ssxc</Box> */}
+          </Grid>
+        </Hidden>
+        <Hidden only="xs">
+          <Grid item sm={2}>
+            <Box bgcolor="white" className={classes.boxes}></Box>
+          </Grid>
+        </Hidden>
+        <Grid className={classes.hadik} item sm={8}>
           <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlined />
-            </Avatar>
-            <Typography component='h1' variant='h5'>
-              Sign up
+            <Avatar className={classes.avatar}></Avatar>
+            <Typography
+              className={classes.matcha}
+              component="h1"
+              variant="h6"
+            >
+              Sign in to Matcha
             </Typography>
-            <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
-                <a href="http://localhost:3001/auth/google">
-                  <Chip
-                      icon={<ImgIcons />}
-                      label="Google"
-                      // onClick={this.handelGoogle}
-                      color="primary"
-                      variant="outlined"
-                      clickable
-                  />
-                </a>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-              <a href="http://localhost:3001/auth/facebook">
-                  <Chip
-                      icon={<FacebookIcon />}
-                      label="Facebook"
-                      // onClick={this.handelGoogle}
-                      color="primary"
-                      variant="outlined"
-                      clickable
-                  />
-                </a>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-              <a href="http://localhost:3001/auth/42">
-                  <Chip
-                      icon={<FacebookIcon />}
-                      label="42"
-                      // onClick={this.handelGoogle}
-                      color="primary"
-                      variant="outlined"
-                      clickable
-                  />
-                </a>
-              </Grid>
-            </Grid>
-            <form className={classes.form} method='POST' onSubmit={this.signup}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    autoComplete='uname'
-                    name='userName'
-                    variant='outlined'
-                    required
-                    fullWidth
-                    id='inputUserName'
-                    label='User Name'
-                    autoFocus
-                    onChange={this.onChange.bind(this)}
-                    value={this.state.userName}
-                    helperText={concat2}
-                    error={
-                      this.state.errMsg.userNameErr !== undefined ||
-                      this.state.errMsg.validUserNameErr !== undefined
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    autoComplete='fname'
-                    name='firstName'
-                    variant='outlined'
-                    required
-                    fullWidth
-                    id='inputFirstName'
-                    label='First Name'
-                    autoFocus
-                    onChange={this.onChange.bind(this)}
-                    value={this.state.firstName}
-                    helperText={this.state.errMsg.validFirstNameErr}
-                    error={this.state.errMsg.validFirstNameErr !== undefined}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    variant='outlined'
-                    required
-                    fullWidth
-                    id='inputLastName'
-                    label='Last Name'
-                    name='lastName'
-                    autoComplete='lname'
-                    autoFocus
-                    onChange={this.onChange.bind(this)}
-                    value={this.state.lastName}
-                    helperText={this.state.errMsg.validLastNameErr}
-                    error={this.state.errMsg.validLastNameErr !== undefined}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant='outlined'
-                    required
-                    fullWidth
-                    id='email'
-                    label='Email Address'
-                    name='email'
-                    autoComplete='email'
-                    autoFocus
-                    onChange={this.onChange.bind(this)}
-                    value={this.state.email}
-                    helperText={concat1}
-                    error={
-                      this.state.errMsg.emailErr !== undefined ||
-                      this.state.errMsg.validEmailErr !== undefined
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant='outlined'
-                    required
-                    fullWidth
-                    name='password'
-                    label='Password'
-                    type='password'
-                    id='inputPassword'
-                    autoComplete='current-password'
-                    autoFocus
-                    onChange={this.onChange.bind(this)}
-                    value={this.state.password}
-                    helperText={this.state.errMsg.validPassErr}
-                    error={this.state.errMsg.validPassErr !== undefined}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant='outlined'
-                    required
-                    fullWidth
-                    name='cnfrmPassword'
-                    type='password'
-                    id='inputCnfrmPassword'
-                    autoComplete='current-password'
-                    label='Confirm Password'
-                    autoFocus
-                    onChange={this.onChange.bind(this)}
-                    value={this.state.cnfrmPassword}
-                    helperText={concat3}
-                    error={
-                      this.state.errMsg.passErr !== undefined ||
-                      this.state.errMsg.validCnfpErr !== undefined
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox value='allowExtraEmails' color='primary' />
-                    }
-                    label='I want to receive notification and updates via email.'
-                  />
-                </Grid>
-              </Grid>
+            <div className={classes.oauth}>
               <Button
-                type='submit'
-                fullWidth
-                variant='contained'
-                color='primary'
-                className={classes.submit}
+              href="http://localhost:3001/auth/42"
+                className={classes.intra}
+                startIcon={<IntraSvg />}
               >
-                Sign Up
+                <Hidden only="xs">sign in with intra</Hidden>
               </Button>
-              <Grid container justify='flex-end'>
-                <Grid item>
-                  <Typography variant='body2'>
-                    <Link to='/Login'>Already have an account? Sign in</Link>
-                  </Typography>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
-        </Container>
-      </Size>
+              <Button
+                size="large"
+                href="http://localhost:3001/auth/facebook"
+                className={classes.buttonOauth}
+                variant="outlined"
+              >
+                <FaFacebookF />
+              </Button>
+              <Button
+                size="large"
+                href="http://localhost:3001/auth/google"
+                className={classes.buttonOauth}
+                variant="outlined"
+              >
+                <FaGoogle />
+              </Button>
+            </div>
+            <div className={classes.or}>
+              <div className={classes.leftline}></div>
+              <div>Or</div>
+              <div className={classes.rightline}></div>
+            </div>
+    <form className={classes.form} method='POST' >
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            autoComplete='uname'
+            name='userName'
+            variant='outlined'
+            required
+            fullWidth
+            id='inputUserName'
+            label='User Name'
+            autoFocus
+            onChange={this.onChange.bind(this)}
+            value={this.state.userName}
+            helperText={concat2}
+            error={
+              this.state.errMsg.userNameErr !== undefined ||
+              this.state.errMsg.validUserNameErr !== undefined
+            }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            autoComplete='fname'
+            name='firstName'
+            variant='outlined'
+            required
+            fullWidth
+            id='inputFirstName'
+            label='First Name'
+            autoFocus
+            onChange={this.onChange.bind(this)}
+            value={this.state.firstName}
+            helperText={this.state.errMsg.validFirstNameErr}
+            error={this.state.errMsg.validFirstNameErr !== undefined}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            variant='outlined'
+            required
+            fullWidth
+            id='inputLastName'
+            label='Last Name'
+            name='lastName'
+            autoComplete='lname'
+            autoFocus
+            onChange={this.onChange.bind(this)}
+            value={this.state.lastName}
+            helperText={this.state.errMsg.validLastNameErr}
+            error={this.state.errMsg.validLastNameErr !== undefined}
+
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant='outlined'
+            required
+            fullWidth
+            id='email'
+            label='Email Address'
+            name='email'
+            autoComplete='email'
+            autoFocus
+            onChange={this.onChange.bind(this)}
+            value={this.state.email}
+            helperText={concat1}
+            error={
+              this.state.errMsg.emailErr !== undefined ||
+              this.state.errMsg.validEmailErr !== undefined
+            }
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant='outlined'
+            required
+            fullWidth
+            name='password'
+            label='Password'
+            type='password'
+            id='inputPassword'
+            autoComplete='current-password'
+            autoFocus
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant='outlined'
+            required
+            fullWidth
+            name='cnfrmPassword'
+            type='password'
+            id='inputCnfrmPassword'
+            autoComplete='current-password'
+            label='Confirm Password'
+            autoFocus
+            onChange={this.onChange.bind(this)}
+            value={this.state.password}
+            helperText={this.state.errMsg.validPassErr}
+            error={this.state.errMsg.validPassErr !== undefined}
+
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Checkbox value='allowExtraEmails' color='primary' />
+            }
+            label='I want to receive notification and updates via email.'
+          />
+        </Grid>
+      </Grid>
+      <Button
+        type='submit'
+        fullWidth
+        variant='contained'
+        color='primary'
+        className={classes.submit}
+      >
+        Sign Up
+      </Button>
+      <Grid container justify='flex-end'>
+        <Grid item>
+          <Typography variant='body2'>
+            <a href='/Login'>Already have an account? Sign in</a>
+          </Typography>
+        </Grid>
+      </Grid>
+    </form>
+    </div>
+          </Grid>
+          <Hidden only="xs">
+            <Grid item sm={2}>
+              <Box className={classes.boxes} bgcolor="white"></Box>
+            </Grid>
+          </Hidden>
+        </Grid>
+      </Grid>
+    </div>
     )
   }
 }
 
-export default withStyles(useStyles)(Signup)
+export default withStyles(styles)(Signup)

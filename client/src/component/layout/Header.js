@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Menu, Brightness4, Brightness7 } from "@material-ui/icons";
-import { Item1, Item2 } from "./res/menuItemcollapse"
+import { Item1 } from "./res/menuItemcollapse"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,37 +50,12 @@ const useStyles = makeStyles((theme) => ({
 const HeaderLoggedin = (props) => {
   const classes = useStyles(props);
   return (
-    <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar className={classes.marginTopOver}>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <Menu />
-            <Switch
-              checked={props.darkMode}
-              onChange={() => props.setDarkMode(!props.darkMode)}
-            />
-            {props.darkMode ? <Brightness4 /> : <Brightness7 />}
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Matcha
-          </Typography>
-
-          {/* import all staff here  */}
-          <Item1 btnColor={classes.btnColor} logout={props.logout}/>
-
-        </Toolbar>
-      </AppBar>
-    </div>
+      <Item1 btnColor={classes.btnColor} logout={props.logout}/>
   );
 };
 
 const HeaderLoggout = (props) => {
-  const classes = useStyles(props);
+  const classes = useStyles(props); 
 
   return (
     <div className={classes.root}>
@@ -104,7 +79,7 @@ const HeaderLoggout = (props) => {
           </Typography>
 
             {/* import all staff here  */}
-          <Item2 btnColor={classes.btnColor} />
+          <Item1 btnColor={classes.btnColor} />
 
         </Toolbar>
       </AppBar>

@@ -1,27 +1,62 @@
 import React from "react";
-import { Button, MenuItem } from "@material-ui/core";
+import PropTypes from "prop-types";
+import AppBar from "@material-ui/core/AppBar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import Drawer from "@material-ui/core/Drawer";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MailIcon from "@material-ui/icons/Mail";
+import MenuIcon from "@material-ui/icons/Menu";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
+import Link from '@material-ui/core/Link';
+import { MenuItem } from '@material-ui/core';
+import Typography from "@material-ui/core/Typography";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import MenuCollapse from "./menucollapse";
-import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import Axios from "axios";
 const instance = Axios.create({ withCredentials: true });
 
+
+const drawerWidth = 240;
+
 const useStyles = makeStyles((theme) => ({
-    root: {
-        position: "absolute",
-        right: 0
-    },
-    buttonBar: {
-        [theme.breakpoints.down("xs")]: {
-            display: "none"
-        },
-        margin: "10px",
-        paddingLeft: "16px",
-        right: 0,
-        position: "relative",
-        width: "100%",
-        background: "transparent"
-    }
+      root: {
+        display: "flex"
+      },
+      drawer: {
+        [theme.breakpoints.up("sm")]: {
+          width: drawerWidth,
+          flexShrink: 0
+        }
+      },
+      appBar: {
+        [theme.breakpoints.up("sm")]: {
+          width: `calc(100% - ${drawerWidth}px)`,
+          marginLeft: drawerWidth
+        }
+      },
+      menuButton: {
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up("sm")]: {
+          display: "none"
+        }
+      },
+      // necessary for content to be below app bar
+      toolbar: theme.mixins.toolbar,
+      drawerPaper: {
+        width: drawerWidth
+      },
+      content: {
+        flexGrow: 1,
+        padding: theme.spacing(3)
+      }
 }));
 
 const handelLogout = (logout) => {
@@ -29,86 +64,114 @@ const handelLogout = (logout) => {
     logout();
 };
 
-const Item1 = (props) => {
-    const classes = useStyles(props)
-    return (
-        <div className={classes.root}>
-            <MenuCollapse>
-                <MenuItem>
-                    <Button className={props.btnColor}>
-                        <Link to="/" style={{ textDecoration: "none" }}>
-                            {" "}
-                        Home{" "}
-                        </Link>
-                    </Button>
-                </MenuItem>
-                <MenuItem>
-                    <Button className={props.btnColor} onClick={() => handelLogout(props.logout)}>
-                        <Link to="/Login" style={{ textDecoration: "none" }}>
-                            {" "}
-                            logout{" "}
-                        </Link>
-                    </Button>
-                </MenuItem>
-            </MenuCollapse>
-            <div className={classes.buttonBar} id="appbar-collapse">
-                <Button className={props.btnColor}>
-                    <Link to="/" style={{ textDecoration: "none" }}>
-                        {" "}
-                        Home{" "}
-                    </Link>
-                </Button>
-                <Button className={props.btnColor} onClick={() => handelLogout(props.logout)}>
-                    <Link to="/Login" style={{ textDecoration: "none" }}>
-                        {" "}
-                        logout{" "}
-                    </Link>
-                </Button>
-            </div>
-        </div>
+const Item1 =  (props) => {
+    const { window } = props;
+    const classes = useStyles();
+    const theme = useTheme();
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+  
+    const handleDrawerToggle = () => {
+      setMobileOpen(!mobileOpen);
+    };
+  
+    const drawer = (
+      <div>
+        <div className={classes.toolbar} />
+        <Divider />
+        <List>
+          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {["All mail", "Trash", "Spam"].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </div>
     );
-}
-
-const Item2 = (props) => {
-    const classes = useStyles(props)
+  
+    const container =
+      window !== undefined ? () => window().document.body : undefined;
+  
     return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              color="secondary"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              Matcha
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              ModalProps={{
+                keepMounted: true // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              variant="permanent"
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Typography paragraph>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          </Typography>
+        </main>
+      </div>
+    );
+  }
+  
+  Item1.propTypes = {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window: PropTypes.func
+  };
 
-        <div className={classes.root}>
-            <MenuCollapse>
-                <MenuItem>
-                    <Button className={props.btnColor}>
-                        <Link to="/Login" style={{ textDecoration: "none" }}>
-                            {" "}
-                        Login{" "}
-                        </Link>
-                    </Button>
-                </MenuItem>
-                <MenuItem>
-                    <Button className={props.btnColor}>
-                        <Link to="/Sign-up" style={{ textDecoration: "none" }}>
-                            {" "}
-                            Sign-up{" "}
-                        </Link>
-                    </Button>
-                </MenuItem>
-            </MenuCollapse>
-            <div className={classes.buttonBar} id="appbar-collapse">
-                <Button className={props.btnColor}>
-                    <Link to="/Login" style={{ textDecoration: "none" }}>
-                        {" "}
-                        Login{" "}
-                    </Link>
-                </Button>
-                <Button className={props.btnColor}>
-                    <Link to="/Sign-up" style={{ textDecoration: "none" }}>
-                        {" "}
-                        Sign-up{" "}
-                    </Link>
-                </Button>
-            </div>
-        </div>
-    )
-};
-
-export {Item1, Item2}
+export {Item1}
 // export default withStyles(useStyles)({ MenuItemCollapse1, MenuItemCollapse2})

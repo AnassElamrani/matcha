@@ -13,6 +13,7 @@ import Forget from "../component/forget/forget";
 import FillProfil from "../component/profil/fillProfil";
 import Footer from "../component/layout/Footer";
 import Error from "../component/helpers/404";
+import { Item1 } from "../component/layout/res/menuItemcollapse";
 
 const Init = (props) => {
   const [loggedin, setLoggedin] = useState(false);
@@ -45,22 +46,20 @@ const Init = (props) => {
   });
   return (
     <ThemeProvider theme={darkTheme}>
-      <Grid container direction="column">
-        <Grid item>
-          {loggedin && (
-            <HeaderLoggedin
-              darkMode={darkMode}
-              setDarkMode={setDarkMode}
-              logout={logout}
-            />
-          )}
-          {!loggedin && (
-            <HeaderLoggout darkMode={darkMode} setDarkMode={setDarkMode} />
-          )}
-        </Grid>
-        <Grid item container>
+        {
+          loggedin === true && <Item1/>
+        }
+        {
+          loggedin === false && <Login login={login} />
+          && 
           <Switch>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" component={() => <Login login={login} />} />
+             <Route path="/Login" component={() => <Login login={login} />} />
+            <Route path="/Sign-up" component={Signup} />
+          </Switch>
+        }
+          {/* <Switch>
+            <Route exact path="/" component={() => <Login login={login} />} />
             <Route path="/confirm/:cnfId" component={Valid} />
             <Route path="/Sign-up" component={Signup} />
             <Route path="/Login" component={() => <Login login={login} />} />
@@ -69,11 +68,7 @@ const Init = (props) => {
             <Route path="/fillProfil/:id" component={FillProfil} />
             <Route path="*" component={() => <Error isAuth={loggedin} />} />
           </Switch>
-        </Grid>
-        <Grid item xs={12}>
-          <Footer />
-        </Grid>
-      </Grid>
+          <Footer /> */}
     </ThemeProvider>
   );
 };

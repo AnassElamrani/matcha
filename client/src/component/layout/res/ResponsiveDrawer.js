@@ -1,4 +1,6 @@
 import React from "react";
+import { withRouter, Switch, Route } from "react-router-dom"
+// import "../../../../src/history/history";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -19,8 +21,13 @@ import Link from '@material-ui/core/Link';
 import { MenuItem } from '@material-ui/core';
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import MenuCollapse from "./menucollapse";
+import { FaHome, FaInfoCircle } from "react-icons/fa";
+import { RiLogoutCircleLine } from "react-icons/ri";
+
+import { About } from "./About"
+import { Home } from "./Home"
 import Axios from "axios";
+
 const instance = Axios.create({ withCredentials: true });
 
 
@@ -64,7 +71,13 @@ const handelLogout = (logout) => {
     logout();
 };
 
-const Item1 =  (props) => {
+const testAlert = (ok) => {
+  alert(ok);
+}
+
+const ResponsiveDrawer =  (props) => {
+    console.log(props);
+    const { history } = props;
     const { window } = props;
     const classes = useStyles();
     const theme = useTheme();
@@ -73,31 +86,49 @@ const Item1 =  (props) => {
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
     };
-  
+    const itemsListOne = [{text: "Home", icon : < FaHome/>, onClick : () => history.push("/")}, 
+                      {text: "About", icon :< FaInfoCircle/>, onClick : () => history.push("/about")}];
+    const itemsListTwo = [{text: "Logout", icon : < RiLogoutCircleLine />, onClick : () => history.push("/logout")}];
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          {itemsListOne.map((item, index) => {
+            const { text, icon, onClick } = item;
+            return (
+              <ListItem button key={text} onClick={onClick}>
+                <ListItemText primary={text} />
+                {
+                  icon && 
+                  <ListItemIcon>{icon}</ListItemIcon>
+                }
+              </ListItem>
+            );
+          })}
+          {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
-          ))}
+          ))} */}
         </List>
         <Divider />
         <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+        {itemsListTwo.map((item, index) => {
+            const { text, icon, onClick } = item;
+            return (
+              <ListItem button key={text} onClick={onClick}>
+                <ListItemText primary={text} />
+                {
+                  icon && 
+                  <ListItemIcon>{icon}</ListItemIcon>
+                }
+              </ListItem>
+            );
+          })}
         </List>
       </div>
     );
@@ -158,14 +189,21 @@ const Item1 =  (props) => {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Typography paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            {/* <Button onClick={alert('ok')}>alert</Button> */}
+                <Switch>
+                  {/* fillImg -> fiilProfil */}
+                  <Route exact path="/about" component={About} />
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/logout" component={() => { handelLogout()}} />
+                </Switch>
+            {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dode */}
           </Typography>
         </main>
       </div>
     );
   }
   
-  Item1.propTypes = {
+  ResponsiveDrawer.propTypes = {
     /**
      * Injected by the documentation to work in an iframe.
      * You won't need it on your project.
@@ -173,5 +211,5 @@ const Item1 =  (props) => {
     window: PropTypes.func
   };
 
-export {Item1}
+export default withRouter(ResponsiveDrawer);
 // export default withStyles(useStyles)({ MenuItemCollapse1, MenuItemCollapse2})

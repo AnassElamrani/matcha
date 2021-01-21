@@ -100,7 +100,7 @@ const styles = theme => ({
   },
   top: {
     backgroundColor: "white",
-    height: "14%",
+    height: "6%",
     margin: 0
     // border: "1px solid gray"
   },
@@ -224,8 +224,8 @@ class Signup extends Component {
     const { classes } = this.props
     const img = {
       // src: "https://i.ibb.co/gSMgwQY/Group-1.png"
-      src: "https://i.ibb.co/Dty8vRF/420e32dfc9a3a1778b273bd7310eb364.webp"
-      // src : "https://i.ibb.co/BBbJVq8/dribble-4-15-4x.webp"
+      // src: "https://i.ibb.co/Dty8vRF/420e32dfc9a3a1778b273bd7310eb364.webp"
+      src : "https://i.ibb.co/BBbJVq8/dribble-4-15-4x.webp"
       // src : "https://i.ibb.co/f8xZsbq/dribble-4-11-4x.webp"
     };
     return (

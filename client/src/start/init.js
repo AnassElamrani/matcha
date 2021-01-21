@@ -3,7 +3,6 @@ import Axios from "axios";
 import { Route, Switch } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { HeaderLoggedin, HeaderLoggout } from "../component/layout/Header";
 import Home from "../component/Home";
 import Login from "../component/auth/Login";
 import Signup from "../component/auth/Sign-in";
@@ -13,7 +12,8 @@ import Forget from "../component/forget/forget";
 import FillProfil from "../component/profil/fillProfil";
 import Footer from "../component/layout/Footer";
 import Error from "../component/helpers/404";
-import { Item1 } from "../component/layout/res/menuItemcollapse";
+import ResponsiveDrawer from "../component/layout/res/ResponsiveDrawer";
+
 
 const Init = (props) => {
   const [loggedin, setLoggedin] = useState(false);
@@ -47,15 +47,15 @@ const Init = (props) => {
   return (
     <ThemeProvider theme={darkTheme}>
         {
-          loggedin === true && <Item1/>
+          loggedin === true && <ResponsiveDrawer/>           
         }
         {
-          loggedin === false && <Login login={login} />
-          && 
+          loggedin === false && 
+
           <Switch>
-            <Route exact path="/" component={() => <Login login={login} />} />
-             <Route path="/Login" component={() => <Login login={login} />} />
-            <Route path="/Sign-up" component={Signup} />
+            <Route exact path="/Sign-up" component={Signup} />
+            <Route path="/Login" component={() => <Login login={login} />} />
+            <Route path="/*" component={() => <Login login={login} />} />
           </Switch>
         }
           {/* <Switch>

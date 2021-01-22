@@ -8,17 +8,17 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
+// import InboxIcon from "@material-ui/icons/MoveToInbox";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
+// import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
-import Link from '@material-ui/core/Link';
-import { MenuItem } from '@material-ui/core';
+// import Button from "@material-ui/core/Button";
+// import Link from '@material-ui/core/Link';
+// import { MenuItem } from '@material-ui/core';
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { FaHome, FaInfoCircle } from "react-icons/fa";
@@ -66,17 +66,14 @@ const useStyles = makeStyles((theme) => ({
       }
 }));
 
-const handelLogout = (logout) => {
-    instance.post("http://localhost:3001/logout");
-    logout();
-};
-
-const testAlert = (ok) => {
-  alert(ok);
-}
 
 const ResponsiveDrawer =  (props) => {
+  
+  const handelLogout = () => {
     console.log(props);
+    instance.post("http://localhost:3001/logout");
+    props.logout();
+  }; 
     const { history } = props;
     const { window } = props;
     const classes = useStyles();
@@ -88,7 +85,7 @@ const ResponsiveDrawer =  (props) => {
     };
     const itemsListOne = [{text: "Home", icon : < FaHome/>, onClick : () => history.push("/")}, 
                       {text: "About", icon :< FaInfoCircle/>, onClick : () => history.push("/about")}];
-    const itemsListTwo = [{text: "Logout", icon : < RiLogoutCircleLine />, onClick : () => history.push("/logout")}];
+    const itemsListTwo = [{text: "Logout", icon : < RiLogoutCircleLine />, onClick : () => {handelLogout();}}];
     const drawer = (
       <div>
         <div className={classes.toolbar} />
@@ -106,14 +103,6 @@ const ResponsiveDrawer =  (props) => {
               </ListItem>
             );
           })}
-          {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))} */}
         </List>
         <Divider />
         <List>
@@ -188,16 +177,11 @@ const ResponsiveDrawer =  (props) => {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Typography paragraph>
-            {/* <Button onClick={alert('ok')}>alert</Button> */}
                 <Switch>
                   {/* fillImg -> fiilProfil */}
                   <Route exact path="/about" component={About} />
                   <Route exact path="/" component={Home} />
-                  <Route exact path="/logout" component={() => { handelLogout()}} />
                 </Switch>
-            {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dode */}
-          </Typography>
         </main>
       </div>
     );

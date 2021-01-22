@@ -3,32 +3,23 @@ import Axios from 'axios'
 import "../../start/styles.css"
 import IntraSvg from "../../start/IntraSvg";
 import {
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
   Hidden,
-  Icon,
-  LockOutlined,
-  Copyright,
   Checkbox,
   FormControlLabel,
-  LockOutlinedIcon,
   Avatar,
-  CssBaseline,
+  // CssBaseline,
   Button,
   TextField,
   Grid,
   Typography,
   Box,
-  Link
 } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles'
 // import { Link } from 'react-router-dom'
-import ImgIcons from '../helpers/icon'
+// import ImgIcons from '../helpers/icon'
 import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import history from '../../history/history'
-import Size from '../helpers/size'
+// import Size from '../helpers/size'
 
 const styles = theme => ({
   buttonOauth: {
@@ -293,7 +284,7 @@ class Signup extends Component {
               <div>Or</div>
               <div className={classes.rightline}></div>
             </div>
-    <form className={classes.form} method='POST' >
+    <form className={classes.form} method='POST' onSubmit={this.signup}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -377,6 +368,10 @@ class Signup extends Component {
             id='inputPassword'
             autoComplete='current-password'
             autoFocus
+            onChange={this.onChange.bind(this)}
+            value={this.state.password}
+            helperText={this.state.errMsg.validPassErr}
+            error={this.state.errMsg.validPassErr !== undefined}
           />
         </Grid>
         <Grid item xs={12}>
@@ -391,10 +386,12 @@ class Signup extends Component {
             label='Confirm Password'
             autoFocus
             onChange={this.onChange.bind(this)}
-            value={this.state.password}
-            helperText={this.state.errMsg.validPassErr}
-            error={this.state.errMsg.validPassErr !== undefined}
-
+            value={this.state.cnfrmPassword}
+            helperText={concat3}
+            error={
+              this.state.errMsg.passErr !== undefined ||
+              this.state.errMsg.validCnfpErr !== undefined
+            }
           />
         </Grid>
         <Grid item xs={12}>

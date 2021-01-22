@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { Route, Switch } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+// import { Grid } from "@material-ui/core";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import Home from "../component/Home";
+// import Home from "../component/Home";
 import Login from "../component/auth/Login";
 import Signup from "../component/auth/Sign-in";
-import Valid from "../component/auth/Valid";
-import SendForget from "../component/forget/sendForget";
-import Forget from "../component/forget/forget";
-import FillProfil from "../component/profil/fillProfil";
-import Footer from "../component/layout/Footer";
-import Error from "../component/helpers/404";
+// import Valid from "../component/auth/Valid";
+// import SendForget from "../component/forget/sendForget";
+// import Forget from "../component/forget/forget";
+// import FillProfil from "../component/profil/fillProfil";
+// import Footer from "../component/layout/Footer";
+// import Error from "../component/helpers/404";
 import ResponsiveDrawer from "../component/layout/res/ResponsiveDrawer";
 
 
 const Init = (props) => {
+
   const [loggedin, setLoggedin] = useState(false);
+  
   const login = () => {
     setLoggedin(!loggedin);
   };
@@ -47,7 +49,7 @@ const Init = (props) => {
   return (
     <ThemeProvider theme={darkTheme}>
         {
-          loggedin === true && <ResponsiveDrawer/>           
+          loggedin === true && <ResponsiveDrawer logout={logout}/>           
         }
         {
           loggedin === false && 

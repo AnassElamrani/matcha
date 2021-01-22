@@ -1,4 +1,4 @@
-import react from 'react';
+// import react from 'react';
 import { Typography } from '@material-ui/core';
 
 export const About = () => {

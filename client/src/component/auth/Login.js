@@ -3,19 +3,12 @@ import Axios from "axios";
 import "../../start/styles.css"
 import IntraSvg from "../../start/IntraSvg";
 import {
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
   Hidden,
-  Icon,
-  LockOutlined,
-  Copyright,
   Checkbox,
   FormControlLabel,
-  LockOutlinedIcon,
+  // LockOutlinedIcon,
   Avatar,
-  CssBaseline,
+  // CssBaseline,
   Button,
   TextField,
   Grid,
@@ -23,7 +16,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { FaFacebookF, FaGoogle } from "react-icons/fa";
-import { createMuiTheme, makeStyles, withStyles} from "@material-ui/core/styles";
+import { withStyles} from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import history from "../../history/history";
 const instance = Axios.create({ withCredentials: true });
@@ -269,7 +262,10 @@ class Login extends Component {
                     <div>Or</div>
                     <div className={classes.rightline}></div>
                   </div>
-                  <form className={classes.form}>
+                  <form method='POST' className={classes.form} onSubmit={this.login}>
+                  <Typography variant='subtitle2' gutterBottom color='secondary'>
+                    {this.state.errMsg.errorGlobal}
+                  </Typography>
                     <TextField
                       variant="outlined"
                       margin="normal"

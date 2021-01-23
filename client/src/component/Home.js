@@ -1,9 +1,16 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import { Button, TextField, Avatar, Grid, Typography } from "@material-ui/core";
+import { 
+  // Button, TextField, 
+  Avatar, Grid, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { AccountCircle } from "@material-ui/icons";
 import history from "../history/history";
+import Steps from "./helpers/stepper"
+import AddImg from '../component/profil/fillImg'
+import FillProfil from '../component/profil/fillProfil'
+
+
 const instance = Axios.create({ withCredentials: true });
 
 const useStyles = (theme) => ({
@@ -48,7 +55,7 @@ class Home extends Component {
       .then((res) => {
         if (res.data.input) this.setState({ errMsg: res.data.input });
         if (res.data === "login") this.setState({ redirect: "/Login" });
-        else if (res.data.status) this.setState({ fillProfil: `/fillProfil/${id}` });
+        else if (res.data.status) this.setState({ fillProfil: `/addImg/${id}` })
       })
       .catch((error) => {
         console.log(error);
@@ -77,17 +84,18 @@ class Home extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Grid container component="main" className={classes.root}>
+      <Grid container component='main' className={classes.root}>
         <Grid item container>
           <Grid item sm={2} />
           <Grid item xs={12} sm={8}>
             <Avatar className={classes.avatar}>
               <AccountCircle />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography component='h1' variant='h5'>
               Profil
             </Typography>
-            <form
+            <Steps img={AddImg} fill={FillProfil} id={this.state.id} />
+            {/* <form
               method="POST"
               className={classes.form}
               onSubmit={(event) => this.home(event, this.state.id)}
@@ -168,12 +176,12 @@ class Home extends Component {
               >
                 Edit
               </Button>
-            </form>
+            </form> */}
           </Grid>
           <Grid item sm={2} />
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 

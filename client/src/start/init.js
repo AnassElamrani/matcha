@@ -6,7 +6,7 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 // import Home from "../component/Home";
 import Login from "../component/auth/Login";
 import Signup from "../component/auth/Sign-in";
-// import Valid from "../component/auth/Valid";
+import Valid from "../component/auth/Valid";
 // import SendForget from "../component/forget/sendForget";
 // import Forget from "../component/forget/forget";
 // import FillProfil from "../component/profil/fillProfil";
@@ -57,6 +57,7 @@ const Init = (props) => {
           <Switch>
             <Route exact path="/Sign-up" component={Signup} />
             <Route path="/Login" component={() => <Login login={login} />} />
+            <Route path="/confirm/:cnfId" component={Valid} />
             <Route path="/*" component={() => <Login login={login} />} />
           </Switch>
         }

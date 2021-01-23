@@ -1,36 +1,42 @@
 const db = require('../util/database');
 
 module.exports = class Tag {
-    constructor (id , name){
-        this.id = id;
-        this.name = name;
-    }
+  constructor(id, name) {
+    this.id = id;
+    this.name = name;
+  }
 
-    save() {
-        return db.execute('INSERT INTO tag(name) VALUES(?)' , [this.name]);
-    }
+  save() {
+    return db.execute("INSERT INTO tag(name) VALUES(?)", [this.name]);
+  }
 
-    static tagExists(name){
-        return db.execute('SELECT id FROM tag WHERE name = ?', [name]);
-    }
+  static tagExists(name) {
+    return db.execute("SELECT id FROM tag WHERE name = ?", [name]);
+  }
 
-    static tagIdModel(id, name) {
-        return db.execute('SELECT * FROM tag INNER JOIN tag_user on tag.id = tag_user.tag_id WHERE tag_user.users_id = ? AND tag.name = ?', [id, name]);
-    };
+  static tagIdModel(id, name) {
+    return db.execute(
+      "SELECT * FROM tag INNER JOIN tag_user on tag.id = tag_user.tag_id WHERE tag_user.users_id = ? AND tag.name = ?",
+      [id, name]
+    );
+  }
 
-    static getLastOne(){
-        return db.execute('SELECT * FROM tag ORDER BY ID DESC LIMIT 1');
-    }
+  static getLastOne() {
+    return db.execute("SELECT * FROM tag ORDER BY ID DESC LIMIT 1");
+  }
 
-    // Insert data in table tag_user (n,n)
-    static insertInTagUser(idUser, idTag){
-        return db.execute('INSERT INTO tag_user(users_id, tag_id) VALUES(?, ?)' , [idUser, idTag]);
-    }
+  // Insert data in table tag_user (n,n)
+  static insertInTagUser(idUser, idTag) {
+    return db.execute("INSERT INTO tag_user(users_id, tag_id) VALUES(?, ?)", [
+      idUser,
+      idTag,
+    ]);
+  }
 
-    static cmpIdTag(idTag){
-        return db.execute('SELECT * FROM tag_user WHERE tag_id = ?', [idTag]);
-    }
-    static getAllTag(){
-        return db.execute('SELECT * FROM tag');
-    }
-}
+  static cmpIdTag(idTag) {
+    return db.execute("SELECT * FROM tag_user WHERE tag_id = ?", [idTag]);
+  }
+  static getAllTag(id) {
+    return db.execute("SELECT * FROM tag WHERE id = ?", [id]);
+  }
+};

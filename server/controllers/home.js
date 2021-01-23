@@ -1,7 +1,9 @@
 const User = require("../models/userData");
-const Tag = require("../models/tagData");
+const Tag = require('../models/tagData')
+const Img = require('../models/imgData')
 const Helpers = require("../util/Helpers");
-
+const fs = require("fs");
+const path = require("path");
 // res.locals work like $_SESSION['name']....
 
 // Home controller
@@ -100,76 +102,125 @@ exports.editProfil = (req, res) => {
 // Fill profil with help of id just for test
 
 exports.fillProfil = async (req, res, next) => {
-  // To work with image ********************************
-  // console.log(req.file);
-  // res.set('Content-Type', 'image/png');
-  // res.send('<img src=${req.file.path} width="500"></img>');
-  // **************************************************
-  // need some validator in the validator file.
   var dataErr = {},
-    data = {};
-  data = { ...req.body };
-  data.id = req.params.id;
-  let idTag;
-  try {
-    await User.UserIdModel(data.id).then(([user]) => {
-      if (user.length) {
-        User.fillProfilUpdate(data).then(([UpRes]) => {
-          if (UpRes.affectedRows) dataErr.status = true;
-          else dataErr.msg = "Nothing changed";
-        });
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
-  try {
-    await Tag.tagExists(data.tag).then(([tagRes]) => {
-      tagRes.map((el) => {
-        idTag = el.id;
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-  if (data.tag.charAt(0) === "#") {
-    Tag.tagExists(data.tag).then(([tagRes]) => {
-      if (!tagRes.length) {
-        const tag = new Tag(null, data.tag);
-        tag.save().then(() => {
-          Tag.getLastOne().then(([last]) => {
-            last.map((el) => {
-              Tag.cmpIdTag(el.id).then(([exTag]) => {
-                !exTag.length ? Tag.insertInTagUser(data.id, el.id) : "";
-              });
-            });
-          });
-        });
-      } else {
-        Tag.tagIdModel(data.id, data.tag).then(([userTag]) => {
-          if (!userTag.length)
-            Tag.getLastOne().then(([last]) => {
-              last.map((el) => {
-                Tag.cmpIdTag(el.id).then(([exTag]) => {
-                  !exTag.length ? Tag.insertInTagUser(data.id, el.id) : "";
+    data = {},
+    toSend = {};
+  toSend.input = { ...res.locals.input }
+  data = { ...req.body }
+  data.id = req.params.id
+  
+  if (Object.keys(toSend.input).length !== 0) res.json(toSend)
+  else{
+    try {
+      await User.UserIdModel(data.id).then(([user]) => {
+        if (user.length) {
+          User.fillProfilUpdate(data).then(([UpRes]) => {
+            if (UpRes.affectedRows) dataErr.status = true
+            else dataErr.msg = 'Nothing changed'
+          })
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    data.tag.map((el) => {
+      Tag.tagExists(el.name).then(([tagRes]) => {
+        if (!tagRes.length) {
+          const tag = new Tag(null, el.name)
+          tag.save().then(() => {
+            Tag.tagExists(el.name).then((res) => {
+              res[0].map((id) => {
+                Tag.insertInTagUser(data.id, id.id)
+              })
+            })
+          })
+        } else {
+          Tag.tagIdModel(data.id, el.name).then(([userTag]) => {
+            if (!userTag.length) {
+              Tag.tagExists(el.name).then((res) => {
+                res[0].map((id) => {
+                  Tag.insertInTagUser(data.id, id.id)
                 })
-              });
-            });
-        });
-        dataErr.msgTag = "Already exists";
-      }
-    });
+              })
+            }
+          })
+          dataErr.msgTag = 'Already exists'
+        }
+      })
+    })
+    res.json({dataErr, status: true})
   }
-  res.json(dataErr);
 };
 
-exports.tags = async (req, res) => {
-  var data = {}
-  await Tag.getAllTag().then(([res]) => {
-    // data[i] = res
-    data = res.map((el) => {
-        return {"name":el.name}
-      })
-  })
-  res.json(data)
+exports.fillImg = async (req, res, next) => {
+  // **************************************************
+  // need some validator in the validator file.
+  ///////////////////////////////////// Images : //////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  //save in db
+  // base 64 doesn't work in mac
+  // var images = [];
+  // await req.files.map((el) => {
+  //   // const { originalname, path } = el
+  //   const path = base64Img.base64Sync(el.path)
+  //   images.push({ name: el.originalname, path: path });
+  // });
+  // // console.log(images);
+  // res.json(images);
+  // res.json(req.files)
+
+  // try {
+  //   return res.status(201).json({
+  //     message: "File uploded successfully",
+  //   });
+  // } catch (error) {
+  //   console.error(error);
+  // }
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  var dataErr = {},
+    data = {},
+  data = { ...req.body }
+  data.id = req.params.id
+    dataErr.status = false
+  if (Object.keys(req.files).length !== 0) {
+    req.files.map((el, iKey) => {
+      const img = new Img(
+        null,
+        data.id,
+        'public/upload/' + el.filename,
+        iKey > 0 ? 0 : 1
+      )
+      img.save()
+    })
+    dataErr.msgImg = 'upload done correctly'
+    dataErr.status = true
+  } else dataErr.msgImg = 'No Images uploaded'
+  res.json(dataErr)
 }
+
+exports.tags = async (req, res) => {
+  var data = {};
+  await Tag.getAllTag(req.params.id).then(([res]) => {
+    data = res.map((el, iKey) => {
+      return { key: iKey, name: el.name };
+    });
+  });
+  res.json(data);
+};
+
+exports.getImges = (req, res) => {
+  const uploadDerictory = path.join("public/upload");
+  console.log(uploadDerictory);
+  fs.readdir(uploadDerictory, (err, files) => {
+    console.log(files);
+    if (err) {
+      res.json({ msg: err });
+      //   console.log(err)
+    } else if (files.length === 0) {
+      res.json({ msg: "No Images uploaded" });
+    }
+    return res.json({ files });
+    // console.log(file)
+  });
+};

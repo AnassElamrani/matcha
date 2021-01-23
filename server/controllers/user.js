@@ -45,7 +45,7 @@ exports.signUp = async (req, res, next) => {
   if (!checkErr.includes(1)) {
     var vkey = Helpers.keyCrypto(req.body.userName);
     var url =
-      "<a href='http://localhost:3000/confirm/" +
+      "<a  href='http://localhost:3000/confirm/" +
       vkey +
       "'>Confirm your email</a>";
     const user = new User(
@@ -91,9 +91,16 @@ exports.postLogin = async (req, res, next) => {
 
   // we need to stop redirection if user ids not login
   await User.UserNameModel(req.body.userName).then(([el]) => {
-    el.map((el) => {
-      if (el.verify === 0) verify = true;
-    });
+    if(el.length != 0)
+    {
+      // console.log("***", el);
+      el.map((el) => {
+        if (el.verify === 1)
+        verify = true;
+        else 
+        verify = false;
+      });
+    }
   });
 
   await User.UserNameModel(req.body.userName)
@@ -101,20 +108,27 @@ exports.postLogin = async (req, res, next) => {
       if (user.length) {
         user.map((el) => {
           if (Helpers.cmpBcypt(req.body.password, el.password)) {
-            try {
-              const token = createtoken(el.id);
-              res.cookie("jwt", token, {
-                httpOnly: true,
-                maxAge: maxAge * 1000,
-              });
-              res.status(201).json({
-                status1: verify,
-                status: "success",
-                user: el.id,
-                token,
-              });
-            } catch (err) {
-              res.status(400).json({});
+            // console.log('verify : ' , verify);
+            if(verify === false)
+            {
+              console.log("\n+++\n");
+              dataErr.errorGlobal = "Please Verify Your account from the link we sent you in you mailbox"; 
+            } else {
+              try {
+                const token = createtoken(el.id);
+                res.cookie("jwt", token, {
+                  httpOnly: true,
+                  maxAge: maxAge * 1000,
+                });
+                res.status(201).json({
+                  verified: verify,
+                  status: "success",
+                  user: el.id,
+                  token,
+                });
+              } catch (err) {
+                res.status(400).json({});
+              }
             }
           } else dataErr.errorGlobal = "Username or Password is incorrect";
         });
@@ -200,23 +214,23 @@ exports.forgetPassword = async (req, res, next) => {
 // validate user profil
 
 exports.confirmUser = (req, res, next) => {
-  var dataErr = {};
+  var data = {};
   User.validateUser(req.params.vkey)
     .then(([vKey]) => {
       if (vKey.changedRows === 1) {
-        dataErr.status = "succes";
-        dataErr.msg = "You can login now !";
-        dataErr.url = "/Login";
+        data.status = "succes";
+        data.msg = "You can login now !";
+        data.url = "/Login";
       } else if (vKey.affectedRows === 1) {
-        dataErr.status = "verify";
-        dataErr.msg = "Already verify";
-        dataErr.url = "/Login";
+        data.status = "verify";
+        data.msg = "Already verify";
+        data.url = "/Login";
       } else {
-        dataErr.status = "fail";
-        dataErr.msg = "You have been enable to verify your account";
-        dataErr.url = "/sendNewEmail";
+        data.status = "fail";
+        data.msg = "You have been enable to verify your account";
+        data.url = "/sendNewEmail";
       }
-      res.json(dataErr);
+      res.json(data);
     })
     .catch((err) => console.log(err));
 };

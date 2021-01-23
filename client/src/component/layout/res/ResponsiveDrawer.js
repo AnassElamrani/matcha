@@ -2,6 +2,7 @@ import React from "react";
 import { withRouter, Switch, Route } from "react-router-dom"
 // import "../../../../src/history/history";
 import PropTypes from "prop-types";
+import "../../../start/styles.css"
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
@@ -23,9 +24,10 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { FaHome, FaInfoCircle } from "react-icons/fa";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import { MdAccountCircle } from "react-icons/md";
 
 import { About } from "./About"
-import { Home } from "./Home"
+import Home from "../../profil/Home"
 import Axios from "axios";
 
 const instance = Axios.create({ withCredentials: true });
@@ -63,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
       content: {
         flexGrow: 1,
         padding: theme.spacing(3)
+      },
+      ty : {
+        fontFamily: "Comfortaa",
       }
 }));
 
@@ -83,8 +88,10 @@ const ResponsiveDrawer =  (props) => {
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
     };
-    const itemsListOne = [{text: "Home", icon : < FaHome/>, onClick : () => history.push("/")}, 
-                      {text: "About", icon :< FaInfoCircle/>, onClick : () => history.push("/about")}];
+    const itemsListOne = [{text: "Home", icon : < FaHome/>, onClick : () => history.push("/")},
+    {text: "Profile", icon: < MdAccountCircle/>}, 
+    {text: "About", icon :< FaInfoCircle/>, onClick : () => history.push("/about")},
+    ];
     const itemsListTwo = [{text: "Logout", icon : < RiLogoutCircleLine />, onClick : () => {handelLogout();}}];
     const drawer = (
       <div>
@@ -139,7 +146,7 @@ const ResponsiveDrawer =  (props) => {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap>
+            <Typography className={classes.ty} variant="h6" noWrap>
               Matcha
             </Typography>
           </Toolbar>

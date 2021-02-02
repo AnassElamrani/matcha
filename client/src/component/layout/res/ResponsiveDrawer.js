@@ -22,15 +22,24 @@ import Toolbar from "@material-ui/core/Toolbar";
 // import { MenuItem } from '@material-ui/core';
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { FaHome, FaInfoCircle } from "react-icons/fa";
-import { RiLogoutCircleLine } from "react-icons/ri";
+import { FaHome, FaInfoCircle, FaRegComments, FaHotjar } from 'react-icons/fa'
+import { RiLogoutCircleLine } from 'react-icons/ri'
 import { MdAccountCircle } from "react-icons/md";
 
+
 import { About } from "./About"
-import Home from "../../profil/Home"
+import Browsing from '../../browsing/browsing'
+import Home from '../../profil/Home'
+import EditProfil from '../../profil/editProfill'
+import Match from '../../Match/match'
 import Axios from "axios";
 
 const instance = Axios.create({ withCredentials: true });
+
+/////////////////////////// fame rating /////////////////////////
+/// add a frame rating  + 1 ... sign up | complet profil | match
+/// -1 | unmatch | block
+/////////////////////////////////////////////////////////////////
 
 
 const drawerWidth = 240;
@@ -73,23 +82,38 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ResponsiveDrawer =  (props) => {
-  
-  const handelLogout = () => {
-    console.log(props);
-    instance.post("http://localhost:3001/logout");
-    props.logout();
-  }; 
-    const { history } = props;
-    const { window } = props;
-    const classes = useStyles();
-    const theme = useTheme();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-  
+
+    const { history } = props
+    const { window } = props
+    const classes = useStyles()
+    const theme = useTheme()
+    const [mobileOpen, setMobileOpen] = React.useState(false)
+    const [id, setId] = React.useState('')
+
+    React.useEffect(() => {
+      instance
+        .get('http://localhost:3001/base')
+        .then((res) => {
+          setId(res.data[0].id)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }, [])
+
+    const handelLogout = () => {
+      console.log(props);
+      instance.post("http://localhost:3001/logout");
+      props.logout();
+    }; 
+
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
     };
     const itemsListOne = [{text: "Home", icon : < FaHome/>, onClick : () => history.push("/")},
-    {text: "Profile", icon: < MdAccountCircle/>}, 
+    {text: "match", icon : < FaRegComments/>, onClick : () => history.push(`/match/${id}`)},
+    {text: "browsing", icon : < FaHotjar/>, onClick : () => history.push(`/browsing/${id}`)},
+    {text: "Profile", icon: < MdAccountCircle/>, onClick:  () => history.push(`/edit/${id}`)}, 
     {text: "About", icon :< FaInfoCircle/>, onClick : () => history.push("/about")},
     ];
     const itemsListTwo = [{text: "Logout", icon : < RiLogoutCircleLine />, onClick : () => {handelLogout();}}];
@@ -135,47 +159,47 @@ const ResponsiveDrawer =  (props) => {
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
+        <AppBar position='fixed' className={classes.appBar}>
           <Toolbar>
             <IconButton
-              color="secondary"
-              aria-label="open drawer"
-              edge="start"
+              color='secondary'
+              aria-label='open drawer'
+              edge='start'
               onClick={handleDrawerToggle}
               className={classes.menuButton}
             >
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.ty} variant="h6" noWrap>
+            <Typography className={classes.ty} variant='h6' noWrap>
               Matcha
             </Typography>
           </Toolbar>
         </AppBar>
-        <nav className={classes.drawer} aria-label="mailbox folders">
+        <nav className={classes.drawer} aria-label='mailbox folders'>
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-          <Hidden smUp implementation="css">
+          <Hidden smUp implementation='css'>
             <Drawer
               container={container}
-              variant="temporary"
-              anchor={theme.direction === "rtl" ? "right" : "left"}
+              variant='temporary'
+              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
               open={mobileOpen}
               onClose={handleDrawerToggle}
               classes={{
-                paper: classes.drawerPaper
+                paper: classes.drawerPaper,
               }}
               ModalProps={{
-                keepMounted: true // Better open performance on mobile.
+                keepMounted: true, // Better open performance on mobile.
               }}
             >
               {drawer}
             </Drawer>
           </Hidden>
-          <Hidden xsDown implementation="css">
+          <Hidden xsDown implementation='css'>
             <Drawer
               classes={{
-                paper: classes.drawerPaper
+                paper: classes.drawerPaper,
               }}
-              variant="permanent"
+              variant='permanent'
               open
             >
               {drawer}
@@ -184,14 +208,16 @@ const ResponsiveDrawer =  (props) => {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-                <Switch>
-                  {/* fillImg -> fiilProfil */}
-                  <Route exact path="/about" component={About} />
-                  <Route exact path="/" component={Home} />
-                </Switch>
+          <Switch>
+            <Route exact path='/edit/:id' component={EditProfil} />
+            <Route exact path='/match/:id' component={Match} />
+            <Route exact path='/browsing/:id' component={Browsing} />
+            <Route exact path='/about' component={About} />
+            <Route exact path='/' component={Home} />
+          </Switch>
         </main>
       </div>
-    );
+    )
   }
   
   ResponsiveDrawer.propTypes = {
@@ -203,4 +229,3 @@ const ResponsiveDrawer =  (props) => {
   };
 
 export default withRouter(ResponsiveDrawer);
-// export default withStyles(useStyles)({ MenuItemCollapse1, MenuItemCollapse2})

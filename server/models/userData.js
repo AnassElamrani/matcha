@@ -1,7 +1,7 @@
 const db = require('../util/database');
 
 module.exports = class User {
-    constructor(id, email, userName, firstName, lastName, password, vkey, gender, bio) {
+    constructor(id, email, userName, firstName, lastName, password, vkey, age, gender, bio) {
         this.id = id;
         this.email = email;
         this.userName = userName;
@@ -9,13 +9,14 @@ module.exports = class User {
         this.lastName = lastName;
         this.password = password;
         this.vkey = vkey;
+        this.age = age;
         this.gender = gender;
         this.bio = bio;
     }
     
     save() {
-        return db.execute('INSERT INTO users(email, userName, firstName, lastName, password, vkey, gender, bio) VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
-        , [this.email, this.userName, this.firstName, this.lastName, this.password, this.vkey, this.gender, this.bio]);
+        return db.execute('INSERT INTO users(email, userName, firstName, lastName, password, vkey, age, gender, bio) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        , [this.email, this.userName, this.firstName, this.lastName, this.password, this.vkey, this.age, this.gender, this.bio]);
     };
     
     static oauthRegister(oauth, email, userName, firstName, lastName, password, vkey, gender, bio)
@@ -76,11 +77,10 @@ module.exports = class User {
     // filling profil
 
     static fillProfilUpdate(data){
-        return db.execute("UPDATE users SET  gender = ?,bio = ? WHERE id = ?", [
-          data.gender,
-          data.bio,
-          data.id,
-        ]);
+        return db.execute(
+          'UPDATE users SET age = ?, gender = ?, type = ?, bio = ? WHERE id = ?',
+          [data.age, data.gender, data.type, data.bio, data.id]
+        )
     }
 
 
@@ -97,5 +97,22 @@ module.exports = class User {
           "UPDATE users SET email = ?, userName = ?, firstName= ?, lastName= ? WHERE id = ?",
           [data.email, data.userName, data.firstName, data.lastName, data.id]
         );
+    }
+
+    static UpdateProfilInfo(data){
+        return db.execute(
+          'UPDATE users SET userName = ?, email = ?, firstName= ?, lastName= ?, bio= ? WHERE id = ?',
+          [data.userName, data.email, data.firstName, data.lastName, data.bio, data.id]
+        )
+    }
+
+    static CheckIfE(id){
+        return db.execute(
+          'SELECT * from users WHERE age IS NULL AND gender IS NULL AND type IS NULL AND bio IS NULL AND id = ?',[id]
+        )
+    }
+
+    static getDataMatch(id){
+        return db.execute('SELECT * FROM users WHERE id = ?', [id]);       
     }
 }

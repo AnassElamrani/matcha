@@ -57,6 +57,7 @@ exports.signUp = async (req, res, next) => {
       Helpers.keyBcypt(req.body.password),
       vkey,
       null,
+      null,
       null
     );
     user

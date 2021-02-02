@@ -59,7 +59,7 @@ const FillProfil = (props) => {
         )
       },
     }
-
+    
     await Axios.post(`base/img/${id}`, formData, config)
       .then((res) => {
           setStatus(res.data.status)

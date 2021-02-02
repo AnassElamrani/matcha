@@ -1,6 +1,7 @@
 const User = require("../models/userData");
 const Tag = require('../models/tagData')
 const Img = require('../models/imgData')
+const Geo = require('../models/geoData')
 const Helpers = require("../util/Helpers");
 const fs = require("fs");
 const path = require("path");
@@ -10,7 +11,7 @@ const path = require("path");
 
 exports.index = (req, res, next) => {
   res.locals.user[0].map((el) => {
-    // console.log(el);
+    console.log(res.locals.user[0]);
     res.json(res.locals.user[0]);
   });
 };
@@ -69,34 +70,20 @@ exports.editPassword = (req, res) => {
 // edit profil
 
 exports.editProfil = (req, res) => {
-  //to work with ......
-  // update all input in our db ...
-  // check if it's exists in db
-  var dataErr = {};
-  dataErr.input = { ...res.locals.input };
-  // console.log("test params : " + req.body.userName + " " + req.body.email + " " + req.body.firstName + " " + req.body.lastName + " " + req.body.bio);
-  res.locals.user[0].map(async (el) => {
-    var id = el.id,
-      email = req.body.email,
-      userName = req.body.userName,
-      first = req.body.firstName,
-      last = req.body.lastName,
-      bio = req.body.bio,
-      oldP = req.body.passworde,
-      psText;
-    // console.log(id + "  " + email + "  " + userName + "  " + first + "  " + last + "  " + bio + "  " + oldP);
-    try {
-      await User.UserIdModel(id).then(([user]) => {
-        user.map((el) => (psText = el.password));
-      });
-      if (Helpers.cmpBcypt(oldP, psText)) {
-        // Update all information comming from a request
-      } else dataErr.msg = "Enter your old password";
-      res.json(dataErr);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  var dataErr = {},
+    data = {},
+    toSend = {}
+  toSend.input = { ...res.locals.input }
+  data = { ...req.body }
+  data.id = req.params.id
+  dataErr.status = false
+
+  if (Object.keys(toSend.input).length !== 0) res.json(toSend)
+  else{
+    User.UpdateProfilInfo(data);
+    dataErr.status = true
+    res.json(dataErr);
+  }
 };
 
 // Fill profil with help of id just for test
@@ -224,3 +211,31 @@ exports.getImges = (req, res) => {
     // console.log(file)
   });
 };
+
+
+exports.checkIs = (req, res) => {
+  User.CheckIfE(req.params.id).then(([is]) => {
+    if (is.length) {
+      res.json({ status: true })
+    }else
+      res.json({ status: false })
+  })
+}
+
+exports.geo = async (req, res) => {
+  var data = {},
+    data = { ...req.body }
+  data.id = req.params.id
+  // const { lat, long } = req.body;
+  let word, lat, long
+  // res.json(Helpers.geoLocal(lat, long));
+  await Helpers.geoLocal(data.lat, data.long).then(city => {
+    city.map(el => {
+      word = el.city.split(' ')
+      // insert into info geo user into db 
+      const geo = new Geo(null, data.id, word[0], data.lat, data.long)
+      geo.save();
+    })
+  })
+  res.json(word[0])
+}

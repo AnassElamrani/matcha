@@ -31,8 +31,7 @@ route.post(
 //  edit profil logged POST
 
 route.post(
-  "/base/editprofil",
-  authVrfy.requireAuth,
+  "/base/editprofil/:id",
   validator.validationInput,
   homeController.editProfil
 );
@@ -64,4 +63,14 @@ route.post("/base/tag/:id", homeController.tags);
 // get all images
 
 route.get("/upload/:filename", homeController.getImges)
+
+// check if profil is complet
+
+route.post('/base/check/:id', homeController.checkIs)
+
+// localistation
+
+route.post('/base/localisation/:id', homeController.geo)
+
+
 module.exports = route;

@@ -95,6 +95,7 @@ const ResponsiveDrawer =  (props) => {
         .get('http://localhost:3001/base')
         .then((res) => {
           setId(res.data[0].id)
+          console.log('RD id:', id)
         })
         .catch((error) => {
           console.log(error)
@@ -213,7 +214,7 @@ const ResponsiveDrawer =  (props) => {
             <Route exact path='/match/:id' component={Match} />
             <Route exact path='/browsing/:id' component={Browsing} />
             <Route exact path='/about' component={About} />
-            <Route exact path='/' component={Home} />
+            <Route exact path='/' render ={(props) => (<Home {...props} id={id}/>)} />
           </Switch>
         </main>
       </div>

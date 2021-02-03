@@ -31,19 +31,31 @@ function getSteps() {
   return ["Add Images", "Fill Profile Informations"];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <MyAddImages />;
-    case 1:
-      return "Fill all required Informations?";
+function getStepContent(step, props) {
+  // switch (step) {
+  //   case 0:
+  //     return <MyAddImages id={props.id}/>;
+  //   case 1:
+  //     return "Fill all required Informations?";
 
-    default:
-      return "Unknown step";
+  //   default:
+  //     return "Unknown step";
+  // }
+  console.log('P', props)
+  if(step == 0 || step == 1)
+  {
+
+    if(step == 0)
+    return <MyAddImages id={props.id}/>;
+    if(step == 1)
+    return "Fill all required Informations?";
   }
+  else
+    return "Uknown step"
 }
 
-export default function HorizontalLinearStepper() {
+export default function HorizontalLinearStepper(props) {
+  console.log('Props:', props)
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -84,7 +96,7 @@ export default function HorizontalLinearStepper() {
         ) : (
           <div>
             <Typography  component={'span'} variant={'body2'} className={classes.instructions}>
-              {getStepContent(activeStep)}
+              {getStepContent(activeStep, props)}
             </Typography>
             <div>
               <Button

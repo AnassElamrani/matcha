@@ -2,6 +2,7 @@ const homeController = require("../controllers/home");
 const validator = require("../controllers/validator");
 const authVrfy = require("../middleware/autMiddleware");
 const Helpers = require("../util/Helpers");
+var multer = require('multer')
 
 const express = require("express");
 const route = express.Router();
@@ -50,12 +51,38 @@ route.post(
 
 // add img
 
+// route.post(
+//   '/base/img/:id',
+//   [Helpers.upload.array('myImage', 5)],
+//   homeController.fillImg
+// )
 route.post(
-  '/base/img/:id',
-  [Helpers.upload.array('myImage', 5)],
-  homeController.fillImg
+  '/base/img/:id', (req, res) => {
+    // console.log('idk', req.body.idk)
+    Helpers.upload(req, res, (err) => {
+      console.log('1', req.body)
+      console.log('2', req.file)
+      console.log('3', req.image)
+      // console.log('sadasd')
+      if(err){
+        res.json({
+          msg: err
+        });
+      } else {
+        if(req.file == undefined){
+          res.json({
+            msg: 'Error: No File Selected!'
+          });
+        } else {
+          res.json( {
+            msg: 'File Uploaded!', req: req.file
+            // file: `uploads/${req.file.filename}`
+          });
+        }
+      }
+    }
 )
-
+  })
 // get all tags [POST]
 
 route.post("/base/tag/:id", homeController.tags);

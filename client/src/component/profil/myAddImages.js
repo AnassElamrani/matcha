@@ -3,7 +3,7 @@ import Axios from 'axios'
 import Size from '../helpers/size'
 import {GridListTile,GridList,CircularProgress,Fab,Button,Grid,Typography,Container,} from '@material-ui/core'
 import {Alert} from '@material-ui/lab'
-import { Add } from '@material-ui/icons'
+import { Add, EventSeat } from '@material-ui/icons'
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 // import { Item1 } from "./items";
 import { makeStyles } from "@material-ui/core/styles";
@@ -103,7 +103,7 @@ const MyAddImages = (props) => {
       imageRefs.current[index].click();
     }
   };
-  const handleChange = (event, id, index) => {
+  const handleChange = async (event, id, index) => {
     if (event.target.files[0]) {
       var value = URL.createObjectURL(event.target.files[0]);
       if (index === 0) {
@@ -124,6 +124,24 @@ const MyAddImages = (props) => {
       }
       // alert(value);
     }
+
+    // 
+
+    console.log('submit')
+    event.preventDefault();
+    var formData = new FormData();
+    console.log('event.target.file', event.target.image)
+    formData.append("image", event.target.files[0]);
+    formData.append("id", 69);
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data',
+        }
+    }
+    var idk = "idk"
+    await Axios.post(`base/img/${id}`, formData, config).then((res) => {
+        console.log('res:', res.data)
+    }).catch((error) => { throw error})
   };
 
   function handleOnDragEnd(result) {
@@ -141,26 +159,9 @@ const MyAddImages = (props) => {
     });
   }
 
-  const submitForm = async (e) => {
-    console.log('submit')
-    e.preventDefault();
-    var formData = new FormData();
-    formData.append("file", e.target.file);
-    const config = {
-        headers: {
-            'content-type': 'multipart/form-data',
-        }
-    }
-
-    await Axios.post('base/img/', formData, config).then((res) => {
-        console.log('res:', res)
-    }).catch((error) => { throw error})
-  }
-
   return (
     <div className="App">
       <Grid container>
-        <form method="POST" onSubmit={(event) => submitForm(event)}>
         <div style={{ overflowY: "scroll", height: "600px" }}>
           <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="items">
@@ -186,7 +187,8 @@ const MyAddImages = (props) => {
                             }}
                             >
                             <input
-                            name="file"
+                            name="image"
+                            accept=".gif,.jpg,.jpeg,.png"
                               ref={addToRefs}
                               onChange={(e) => {
                                   handleChange(e, id, index);
@@ -209,7 +211,6 @@ const MyAddImages = (props) => {
           </DragDropContext>
           <input type="submit" name="Submit form"/>
         </div>
-        </form>
         <div
           ref={ProfImgRef}
           style={{ width: "400px", height: "600px", border: "1px black solid" }}

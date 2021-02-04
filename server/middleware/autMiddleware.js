@@ -25,15 +25,19 @@ exports.checkUser = (req, res, next) => {
     if (token) {
         jwt.verify(token, 'secret', async (err, decodedToken) => {
             if (err) {
+                console.log('ahya 1 !!!!')
                 res.locals.user = null;
                 next();
             }else{
+                console.log('user kayn f db a sir ....')
                 let user = await User.UserIdModel(decodedToken.id)
                 res.locals.user = user
+                console.log(res.locals.user);
                 next()
             }
         })
     }else{
+        console.log('ahya 2 !!!!')
         res.locals.user = null
         next()
     }

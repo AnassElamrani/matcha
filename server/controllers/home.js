@@ -140,50 +140,17 @@ exports.fillProfil = async (req, res, next) => {
 };
 
 exports.fillImg = async (req, res, next) => {
-  // **************************************************
-  // need some validator in the validator file.
-  ///////////////////////////////////// Images : //////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////
-
-  //save in db
-  // base 64 doesn't work in mac
-  // var images = [];
-  // await req.files.map((el) => {
-  //   // const { originalname, path } = el
-  //   const path = base64Img.base64Sync(el.path)
-  //   images.push({ name: el.originalname, path: path });
-  // });
-  // // console.log(images);
-  // res.json(images);
-  // res.json(req.files)
-
-  // try {
-  //   return res.status(201).json({
-  //     message: "File uploded successfully",
-  //   });
-  // } catch (error) {
-  //   console.error(error);
-  // }
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  var dataErr = {},
-    data = {},
-  data = { ...req.body }
-  data.id = req.params.id
-    dataErr.status = false
-  if (Object.keys(req.files).length !== 0) {
-    req.files.map((el, iKey) => {
-      const img = new Img(
-        null,
-        data.id,
-        'public/upload/' + el.filename,
-        iKey > 0 ? 0 : 1
-      )
-      img.save()
-    })
-    dataErr.msgImg = 'upload done correctly'
-    dataErr.status = true
-  } else dataErr.msgImg = 'No Images uploaded'
-  res.json(dataErr)
+  const {data} = {...res.locals}
+  if(data.errors == "" && data.index != "undefined")
+  {
+    console.log('data', data);
+    console.log('res.locals', {...res.locals})
+    // new Img(data.)
+    // var ret = Img.save();
+  }
+  else {
+  }
+  res.json('abc')
 }
 
 exports.tags = async (req, res) => {

@@ -9,7 +9,7 @@ const route = express.Router();
 
 // Get home [page]
 
-route.get("/base", authVrfy.requireAuth, homeController.index);
+route.get("/base", authVrfy.requireAuth, authVrfy.checkUser, homeController.index);
 
 //continue with this part
 
@@ -57,32 +57,44 @@ route.post(
 //   homeController.fillImg
 // )
 route.post(
-  '/base/img/:id', (req, res) => {
-    // console.log('idk', req.body.idk)
+  '/base/img/:id', (req, res, next) => {
     Helpers.upload(req, res, (err) => {
-      console.log('1', req.body)
-      console.log('2', req.file)
-      console.log('3', req.image)
-      // console.log('sadasd')
+      // console.log('formData', req.body.index);
+      const data = {};
+      // console.log('2', {...req.file})
       if(err){
-        res.json({
-          msg: err
-        });
+        data.msg = "Error Has Occured";
+        data.errors = err;
+        // console.log('error:' ,err)
+        // res.json({
+        //   msg: err
+        // });
       } else {
         if(req.file == undefined){
-          res.json({
-            msg: 'Error: No File Selected!'
-          });
+          // res.json({
+          //   msg: 'Error: No File Selected!'
+          // });
+          data.msg = "No File Selected!"
+          data.errors = "";
+          
         } else {
-          res.json( {
-            msg: 'File Uploaded!', req: req.file
-            // file: `uploads/${req.file.filename}`
-          });
+          data.msg = "File Uploaded!"
+          data.errors = "";
+          data.index = req.body.index;
+          // res.json( {
+            //   msg: 'File Uploaded!', req: req.file
+            //   // file: `uploads/${req.file.filename}`
+            // });
+          }
         }
-      }
+        data.userId = req.body.userId
+        res.locals.data = data;
+        next();
+      console.log('here', data)
     }
-)
-  })
+    )
+    
+}, homeController.fillImg)
 // get all tags [POST]
 
 route.post("/base/tag/:id", homeController.tags);

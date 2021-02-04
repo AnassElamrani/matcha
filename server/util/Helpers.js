@@ -83,9 +83,9 @@ const fileFilter = (req, file, cb) => {
 }
 exports.upload = multer({
   storage: storage,
-  // fileFilter: fileFilter,
+  fileFilter: fileFilter,
   limits: { fileSize: 5000000 },
-}).single('image')
+}).single('file')
 
 
 exports.geoLocal = async (lat, long) => {

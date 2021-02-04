@@ -37,7 +37,8 @@ module.exports = class User {
     };
 
     static UserIdModel(id) {
-        return db.execute('SELECT * FROM users WHERE id = ? limit 1', [id]);
+        console.log('ID', id);
+        return db.execute('SELECT id FROM users WHERE id = ? limit 1', [id]);
     };
 
     static UserNameModel(user) {

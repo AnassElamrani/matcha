@@ -9,7 +9,7 @@ const route = express.Router();
 
 // Get home [page]
 
-route.get("/base", authVrfy.requireAuth, authVrfy.checkUser, homeController.index);
+route.get("/base", (req, res, next) => {console.log('base');next()}, authVrfy.getUserInfos);
 
 //continue with this part
 

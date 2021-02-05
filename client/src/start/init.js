@@ -31,8 +31,13 @@ const Init = (props) => {
       withCredentials: true,
     })
       .then((response) => {
-        if (response.data.jwt) setLoggedin(true);
-        else setLoggedin(false);
+        if (response.data.access === "Granted" && response.data.jwt)
+        {
+          setLoggedin(true)
+        }
+        else {
+          setLoggedin(false);
+        }
       })
       .catch((error) => {
         console.log(error);

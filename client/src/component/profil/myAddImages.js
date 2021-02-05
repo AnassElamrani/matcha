@@ -130,15 +130,15 @@ const MyAddImages = (props) => {
     console.log('submit')
     event.preventDefault();
     var formData = new FormData();
-    console.log('event.target.file', event.target.image)
-    formData.append("image", event.target.files[0]);
-    formData.append("id", 69);
+    formData.set("index", index);
+    console.log('=====>', props)
+    formData.set("userId", props.id);
+    formData.append("file", event.target.files[0]);
     const config = {
         headers: {
             'content-type': 'multipart/form-data',
         }
     }
-    var idk = "idk"
     await Axios.post(`base/img/${id}`, formData, config).then((res) => {
         console.log('res:', res.data)
     }).catch((error) => { throw error})
@@ -187,8 +187,8 @@ const MyAddImages = (props) => {
                             }}
                             >
                             <input
-                            name="image"
-                            accept=".gif,.jpg,.jpeg,.png"
+                            name="file"
+                            // accept=".gif,.jpg,.jpeg,.png"
                               ref={addToRefs}
                               onChange={(e) => {
                                   handleChange(e, id, index);

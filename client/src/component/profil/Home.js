@@ -45,8 +45,10 @@ function getStepContent(step, props) {
   if(step == 0 || step == 1)
   {
 
-    if(step == 0)
-    return <MyAddImages id={props.id}/>;
+    if(step == 0){
+      console.log('------->' ,props)
+      return <MyAddImages id={props.id}/>;
+    }
     if(step == 1)
     return "Fill all required Informations?";
   }

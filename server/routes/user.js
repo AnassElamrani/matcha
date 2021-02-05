@@ -41,7 +41,7 @@ route.post('/logout', userController.logout);
 
 // check if loggin
 
-route.get('/users/checkLogin', userController.checkLogin);
+route.get('/users/checkLogin', authVrfy.requireAuth);
 
 // oAuth
 // Google

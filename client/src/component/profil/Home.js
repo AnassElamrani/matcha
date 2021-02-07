@@ -41,12 +41,12 @@ function getStepContent(step, props) {
   //   default:
   //     return "Unknown step";
   // }
-  console.log('P', props)
+  // console.log('P', props)
   if(step == 0 || step == 1)
   {
 
     if(step == 0){
-      console.log('------->' ,props)
+      // console.log('------->' ,props)
       return <MyAddImages id={props.id}/>;
     }
     if(step == 1)
@@ -57,7 +57,7 @@ function getStepContent(step, props) {
 }
 
 export default function HorizontalLinearStepper(props) {
-  console.log('Props:', props)
+  // console.log('Props:', props)
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();

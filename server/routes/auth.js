@@ -4,7 +4,7 @@ const express = require('express');
 const route = express.Router();
 
 // Checkuser for post method and get method
-route.get('*', authVrfy.getUserInfos);
-route.post('*', authVrfy.getUserInfos);
+// route.get('*', authVrfy.requireAuth);
+// route.post('*', authVrfy.requireAuth);
 
-module.exports = route;
+module.exports = route; 

@@ -9,7 +9,8 @@ const route = express.Router();
 
 // Get home [page]
 
-route.get("/base", (req, res, next) => {console.log('base');next()}, authVrfy.getUserInfos);
+route.get("/base", authVrfy.getUserInfos);
+// route.get("/base", (req, res, next) => {console.log("bz");res.json({ss:'ss'});next()});
 
 //continue with this part
 

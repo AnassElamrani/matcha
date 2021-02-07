@@ -91,28 +91,28 @@ const ResponsiveDrawer =  (props) => {
     const [id, setId] = React.useState('')
     console.log('ResponsiveDrawer Render')
     React.useEffect(() => {
-      console.log('ResponsiveDrawer Useffect')
-      instance
-        .get('http://localhost:3001/base')
-        .then((res) => {
-          // console.log('-------')
-          // console.log('+++++++',res)
-          // if(res.data.access === "Granted")
-          // {
-            setId(res.data[0].id)
-            console.log('RD id:', id)
+      instance.get('http://localhost:3001/base')
+      .then((userInfos) => {
+        
+        console.log('-------', userInfos)
+        // console.log('+++++++')
+        // if(res.data.access === "Granted")
+        // {
+          // setId(res.data[0].id)
+          // console.log('locals', res.locals.user)
           // }
           // else {
             // handelLogout()
-          // }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+            // }
+          })
+          .catch((error) => {
+            // console.log(error)
+          })
+          console.log('ResponsiveDrawer Useffect')
     }, [])
 
     const handelLogout = () => {
-      console.log(props);
+      // console.log(props);
       instance.post("http://localhost:3001/logout");
       props.logout();
     }; 
@@ -223,7 +223,7 @@ const ResponsiveDrawer =  (props) => {
             <Route exact path='/match/:id' component={Match} />
             <Route exact path='/browsing/:id' component={Browsing} />
             <Route exact path='/about' component={About} />
-            {console.log('******'), id}
+            {/* {console.log('******'), id} */}
             <Route exact path='/' render ={(props) => (<Home id={id}/>)} />
           </Switch>
         </main>

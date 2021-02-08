@@ -92,9 +92,10 @@ const ResponsiveDrawer =  (props) => {
     console.log('ResponsiveDrawer Render')
     React.useEffect(() => {
       instance.get('http://localhost:3001/base')
-      .then((userInfos) => {
-        
-        console.log('-------', userInfos)
+      .then((response) => {
+        console.log('-------', response.data.user)
+        if(response.data.user.id != undefined)
+          setId(response.data.user.id)
         // console.log('+++++++')
         // if(res.data.access === "Granted")
         // {

@@ -68,7 +68,7 @@ const intialItems = [
   }));
 
 const MyAddImages = (props) => {
-    const classes = useStyles();
+  const classes = useStyles();
   const [Items, UpdateItems] = useState(intialItems);
   const imageRefs = useRef([]);
   const [ProfileImg, SetProfileImg] = useState(null);
@@ -76,6 +76,7 @@ const MyAddImages = (props) => {
   const [effect, triggerEffect] = useState(false);
   // const [isDD, SetIsDD] = useState(true);
   // const [disabled, SetDisabled] = useState(true);
+  console.log('id', props.id)
 
   imageRefs.current = [];
 
@@ -133,13 +134,13 @@ const MyAddImages = (props) => {
     formData.set("index", index);
     console.log('=====>', props)
     formData.set("userId", props.id);
-    formData.append("file", event.target.files[0]);
+    formData.set("file", event.target.files[0]);
     const config = {
         headers: {
             'content-type': 'multipart/form-data',
         }
     }
-    await Axios.post(`base/img/${id}`, formData, config).then((res) => {
+    await Axios.post(`base/img/${props.id}`, formData, config).then((res) => {
         console.log('res:', res.data)
     }).catch((error) => { throw error})
   };

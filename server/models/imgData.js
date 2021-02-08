@@ -25,7 +25,7 @@ module.exports = class Img {
   save() {
     return db.execute
     (
-      'INSERT INTO imgProfile(users_id, image, pointer) VALUES (?, ?, ?)',
+      'INSERT INTO imgProfil(users_id, image, pointer) VALUES (?, ?, ?)',
       [this.users_id, this.image, this.pointer]
     )
   }

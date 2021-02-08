@@ -57,45 +57,7 @@ route.post(
 //   [Helpers.upload.array('myImage', 5)],
 //   homeController.fillImg
 // )
-route.post(
-  '/base/img/:id', (req, res, next) => {
-    Helpers.upload(req, res, (err) => {
-      // console.log('formData', req.body.index);
-      const data = {};
-      // console.log('2', {...req.file})
-      if(err){
-        data.msg = "Error Has Occured";
-        data.errors = err;
-        // console.log('error:' ,err)
-        // res.json({
-        //   msg: err
-        // });
-      } else {
-        if(req.file == undefined){
-          // res.json({
-          //   msg: 'Error: No File Selected!'
-          // });
-          data.msg = "No File Selected!"
-          data.errors = "";
-          
-        } else {
-          data.msg = "File Uploaded!"
-          data.errors = "";
-          data.index = req.body.index;
-          // res.json( {
-            //   msg: 'File Uploaded!', req: req.file
-            //   // file: `uploads/${req.file.filename}`
-            // });
-          }
-        }
-        data.userId = req.body.userId
-        res.locals.data = data;
-        next();
-      console.log('here', data)
-    }
-    )
-    
-}, homeController.fillImg)
+route.post('/base/img/:id', homeController.multerUpload)
 // get all tags [POST]
 
 route.post("/base/tag/:id", homeController.tags);

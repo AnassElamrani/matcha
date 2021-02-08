@@ -139,19 +139,19 @@ exports.fillProfil = async (req, res, next) => {
   }
 };
 
-exports.fillImg = async (req, res, next) => {
-  const {data} = {...res.locals}
-  if(data.errors == "" && data.index != "undefined")
-  {
-    console.log('data', data);
-    console.log('res.locals', {...res.locals})
-    // new Img(data.)
-    // var ret = Img.save();
-  }
-  else {
-  }
-  res.json('abc')
-}
+// exports.fillImg = async (req, res, next) => {
+//   const {data} = {...res.locals}
+//   if(data.errors == "" && data.index != "undefined")
+//   {
+//     console.log('data', data);
+//     console.log('res.locals', {...res.locals})
+//     // new Img(data.)
+//     // var ret = Img.save();
+//   }
+//   else {
+//   }
+//   res.json('abc')
+// }
 
 exports.tags = async (req, res) => {
   var data = {};
@@ -206,3 +206,53 @@ exports.geo = async (req, res) => {
   })
   res.json(word[0])
 }
+
+
+exports.multerUpload = 
+    (req, res, next) => {
+
+      Helpers.upload(req, res, (err) => {
+      const go = async () => {
+      // console.log('formData', req.body.index);
+      const data = {};
+      // console.log('2', {...req.file})
+      if(err){
+        data.msg = "Error Has Occured";
+        data.errors = err;
+        // console.log('error:' ,err)
+        // res.json({
+          //   msg: err
+          // });
+        } else {
+
+          if(req.file == undefined){
+            // res.json({
+              //   msg: 'Error: No File Selected!'
+              // });
+              data.msg = "No File Selected!"
+              data.errors = "";
+              
+            } else {
+              console.log('req.file', req.file.filename)
+              data.msg = "File Uploaded!"
+             
+              data.errors = "";
+              data.index = req.body.index;
+              image = new Img(null, req.body.userId, req.file.filename, req.body.index)
+              await image.save()
+              // res.json( {
+                //   msg: 'File Uploaded!', req: req.file
+                //   // file: `uploads/${req.file.filename}`
+                // });
+              }
+        }
+            data.userId = req.body.userId
+            res.json({data: data})
+            res.locals.data = data;
+            next();
+            console.log('here', data)
+          }
+          go();
+          }
+          )
+  }

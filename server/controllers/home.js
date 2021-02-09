@@ -266,5 +266,6 @@ exports.multerUpload =
 
   exports.dnd = (req, res, next) => {
     console.log('dnd', req.body)
-    res.json({ops :'DnD'})
+    res.json({ops :'DnD'});
+    // var changeIndex = await 
   }

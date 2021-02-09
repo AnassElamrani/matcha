@@ -29,4 +29,22 @@ module.exports = class Img {
       [this.users_id, this.image, this.pointer]
     )
   }
+
+  static checkImg(users_id, pointer)
+  {
+    return db.execute
+    ('SELECT * FROM imgProfil WHERE `users_id` = ? AND `pointer` = ?', [users_id, pointer]);
+  }
+
+  static updateImg(users_id, image, pointer)
+  {
+    return db.execute
+    ('UPDATE imgProfil SET image = ? WHERE `users_id` = ? AND `pointer` = ?' , [image, users_id, pointer]);
+  }
+
+  static updateImgPointer(oldPointer, newPointer)
+  {
+    return db.execute
+    ('UPDATE imgProfil SET pointer = ? WHERE `pointer` = ?' , [newPointer, oldPointer]);
+  }
 }

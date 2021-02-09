@@ -235,11 +235,18 @@ exports.multerUpload =
             } else {
               console.log('req.file', req.file.filename)
               data.msg = "File Uploaded!"
-             
               data.errors = "";
               data.index = req.body.index;
-              image = new Img(null, req.body.userId, req.file.filename, req.body.index)
-              await image.save()
+              checkIm = await Img.checkImg(req.body.userId, req.body.index);
+              console.log('checkIm', checkIm[0]);
+              if(checkIm[0].length == 0)
+              {
+                image = new Img(null, req.body.userId, req.file.filename, req.body.index)
+                await image.save()
+              } else {
+                var updated = await Img.updateImg(req.body.userId, req.file.filename, req.body.index);
+                console.log('updated', updated[0]);
+              }
               // res.json( {
                 //   msg: 'File Uploaded!', req: req.file
                 //   // file: `uploads/${req.file.filename}`
@@ -255,4 +262,9 @@ exports.multerUpload =
           go();
           }
           )
+  }
+
+  exports.dnd = (req, res, next) => {
+    console.log('dnd', req.body)
+    res.json({ops :'DnD'})
   }

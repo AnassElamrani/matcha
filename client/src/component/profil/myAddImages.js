@@ -145,7 +145,7 @@ const MyAddImages = (props) => {
     }).catch((error) => { throw error})
   };
 
-  function handleOnDragEnd(result) {
+    function handleOnDragEnd(result) {
     if (!result.destination) return;
 
     // console.log("result:", result);
@@ -153,11 +153,18 @@ const MyAddImages = (props) => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     UpdateItems(items);
-    items.map((el, index) => {
+    items.map( async (el, index) => {
       if (index === 0 && el.value !== "") {
         SetProfileImg(el.value);
       }
+      if(index != el.id)
+      {
+        await Axios.post(`base/img/dnd/${props.id}`, {index: index, id: el.id}).then((res) => {
+          console.log('Dnd-res', res)
+        })
+      }
     });
+    console.log('items', items)
   }
 
   return (

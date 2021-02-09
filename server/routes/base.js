@@ -58,6 +58,8 @@ route.post(
 //   homeController.fillImg
 // )
 route.post('/base/img/:id', homeController.multerUpload)
+
+route.post('/base/img/dnd/:id', homeController.dnd)
 // get all tags [POST]
 
 route.post("/base/tag/:id", homeController.tags);

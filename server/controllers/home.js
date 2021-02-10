@@ -264,8 +264,9 @@ exports.multerUpload =
           )
   }
 
-  exports.dnd = (req, res, next) => {
+  exports.dnd = async (req, res, next) => {
+    console.log('-\n')
     console.log('dnd', req.body)
     res.json({ops :'DnD'});
-    // var changeIndex = await 
+    var changeIndex = await Img.updateImgPointer(req.body.index, req.body.id)
   }

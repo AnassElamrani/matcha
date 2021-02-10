@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -31,7 +31,7 @@ function getSteps() {
   return ["Add Images", "Fill Profile Informations"];
 }
 
-function getStepContent(step, props) {
+function getStepContent(step, props, checkTI) {
   // switch (step) {
   //   case 0:
   //     return <MyAddImages id={props.id}/>;
@@ -47,7 +47,7 @@ function getStepContent(step, props) {
 
     if(step == 0){
       // console.log('------->' ,props)
-      return <MyAddImages id={props.id}/>;
+      return <MyAddImages id={props.id} checkTotalImg={checkTI}/>;
     }
     if(step == 1)
     return "Fill all required Informations?";
@@ -61,6 +61,7 @@ export default function HorizontalLinearStepper(props) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
+  const [stepOneFilled , setStepOneFilled] = React.useState('no');
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -73,6 +74,12 @@ export default function HorizontalLinearStepper(props) {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const checkTotalImg = () => {
+    setStepOneFilled('yes');
+    console.log('FULLLLLLLLLLL');
+  }
+  
 
   return (
     <div className={classes.root}>
@@ -98,7 +105,7 @@ export default function HorizontalLinearStepper(props) {
         ) : (
           <div>
             <Typography  component={'span'} variant={'body2'} className={classes.instructions}>
-              {getStepContent(activeStep, props)}
+              {getStepContent(activeStep, props, checkTotalImg)}
             </Typography>
             <div>
               <Button
@@ -113,6 +120,7 @@ export default function HorizontalLinearStepper(props) {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
+                disabled = {stepOneFilled === 'no' ? true : false}
               >
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>

@@ -45,7 +45,12 @@ module.exports = class Img {
   static updateImgPointer(oldPointer, newPointer)
   {
     return db.execute
-    // ('UPDATE imgProfil SET pointer = ? WHERE `pointer` = ?' , [newPointer, oldPointer]);
-    ('UPDATE imgProfil SET pointer=( case when pointer=0 then 1 when pointer=1 then 0 else 0 end)', [oldPointer, newPointer]);
+    ('UPDATE imgProfil SET pointer=( case when pointer=? then ? when pointer=? then ? else 0 end)', [oldPointer, newPointer, newPointer, oldPointer]);
   }
+
+  static ImgsTotalNumber(userId)
+  {
+    return db.execute
+    ('SELECT * FROM imgProfil WHERE users_id = ?', [userId]);
+  } 
 }

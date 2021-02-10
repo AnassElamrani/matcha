@@ -265,8 +265,15 @@ exports.multerUpload =
   }
 
   exports.dnd = async (req, res, next) => {
-    console.log('-\n')
+    console.log('-')
     console.log('dnd', req.body)
     res.json({ops :'DnD'});
     var changeIndex = await Img.updateImgPointer(req.body.index, req.body.id)
+  }
+
+  exports.fetchImgs  = async (req, res, next) => {
+    const total = await Img.ImgsTotalNumber(req.body.userId);
+    console.log('len', total[0].length);
+    console.log('total', total[0])
+    res.json({s:total[0].length})
   }

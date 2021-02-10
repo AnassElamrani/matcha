@@ -60,6 +60,10 @@ route.post(
 route.post('/base/img/:id', homeController.multerUpload)
 
 route.post('/base/img/dnd/:id', homeController.dnd)
+
+route.post('/base/img/fetch/:id', homeController.fetchImgs)
+
+
 // get all tags [POST]
 
 route.post("/base/tag/:id", homeController.tags);

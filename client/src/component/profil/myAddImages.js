@@ -93,6 +93,25 @@ const MyAddImages = (props) => {
       ProfileImgDiv.style.backgroundSize = "400px 600px";
     }
   };
+
+  const fetchImgs = () => {
+    var ss = Axios.post(`/base/img/fetch/${props.id}`, { userId : props.id }).then((res) => {
+    console.log('-axios-')
+    console.log('the-RES', res.data.s);
+    return res.data.s
+  })
+  return ss;
+}
+useEffect(async () => {
+  var fi = await fetchImgs();
+  console.log('fi', fi);
+  if(fi === 4)
+  {
+    props.checkTotalImg();
+  }
+  // if(fi ===)
+}, [effect])
+
   useEffect(() => {
     displayProfileImg();
   }, [effect, ProfileImg, Items, imageRefs]);
@@ -148,7 +167,7 @@ const MyAddImages = (props) => {
     async function handleOnDragEnd(result) {
     if (!result.destination) return;
 
-    // console.log("result:", result);
+    console.log("result:", result);
     const items = Array.from(Items);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
@@ -158,26 +177,22 @@ const MyAddImages = (props) => {
       if (index === 0 && el.value !== "") {
         SetProfileImg(el.value);
       }
-      if(index != el.id)
-      {
-        
-      }
     });
     console.log('items', items)
     var i = 0;
     var counter = 0;
-    while(items[i])
-    {
-      console.log('i', i)
-      console.log('~', items[i])
-      if(i != items[i].id && counter === 0)
-      {
-        counter++;
-        await Axios.post(`base/img/dnd/${props.id}`, {index: i, id: items[i].id}).then((res) => {})
-      }
-      i++;
-    }
-    // console.log('p', p)
+    // while(items[i])
+    // {
+    //   console.log('i', i, 'index', items[i].id)
+    //   if(i != items[i].id && counter === 0)
+    //   {
+    //     counter++;
+    //     await Axios.post(`base/img/dnd/${props.id}`, {index: i, id: items[i].id}).then((res) => {})
+    //   }
+    //   i++;
+    // }
+    // console.log('old', result.source.index, 'new', result.source.)
+    await Axios.post(`base/img/dnd/${props.id}`, {index: result.source.index, id: result.destination.index}).then((res) => {})
   }
 
   return (
@@ -230,7 +245,6 @@ const MyAddImages = (props) => {
               )}
             </Droppable>
           </DragDropContext>
-          <input type="submit" name="Submit form"/>
         </div>
         <div
           ref={ProfImgRef}

@@ -194,7 +194,7 @@ useEffect(async () => {
     // console.log('old', result.source.index, 'new', result.source.)
     await Axios.post(`base/img/dnd/${props.id}`, {index: result.source.index, id: result.destination.index}).then((res) => {})
   }
-
+// asdasd
   return (
     <div className="App">
       <Grid container>

@@ -20,8 +20,11 @@ module.exports = class Like {
     ])
   }
 
-  static checkIfUserisLiked(id) {
-    return db.execute('SElECT * from likes WHERE liker = ?', [id])
+  static checkIfUserisLiked(data) {
+    return db.execute('SElECT * from likes WHERE liker = ? AND liked = ?', [
+      data.idLiked,
+      data.idLiker,
+    ])
   }
 
   static addToTableMatch(data) {
@@ -29,5 +32,12 @@ module.exports = class Like {
       data.idLiker,
       data.idLiked,
     ])
+  }
+
+  static addToTableBlocked(data) {
+    return db.execute(
+      'INSERT INTO blocked(`blocker`, `blocked`, `dlt`) VALUES(?, ?, ?)',
+      [data.idLiker, data.idLiked, 1]
+    )
   }
 }

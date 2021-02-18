@@ -15,8 +15,6 @@ import {
   Box,
 } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles'
-// import { Link } from 'react-router-dom'
-// import ImgIcons from '../helpers/icon'
 import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import history from '../../history/history'
 // import Size from '../helpers/size'
@@ -34,7 +32,6 @@ const styles = theme => ({
     fontSize: "12px",
     margin: theme.spacing(1),
     color: "#383838",
-    // border: "1px solid lightgray",
     backgroundColor: "#f7f7f7",
     textTransform: "capitalize"
   },
@@ -167,7 +164,6 @@ class Signup extends Component {
       this.setState({ errMsg: response.data })
       if (response.data.status === 'success') this.setState({ valid: true })
     })
-    // Object.keys(this.state.errMsg).length !== 0 ? this.setState({valid: false}) : console.log("nothting")
   }
 
   componentDidMount() {
@@ -260,7 +256,7 @@ class Signup extends Component {
                 className={classes.intra}
                 startIcon={<IntraSvg />}
               >
-                <Hidden only="xs">sign in with intra</Hidden>
+                <Hidden only="xs">sign up with intra</Hidden>
               </Button>
               <Button
                 size="large"

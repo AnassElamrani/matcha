@@ -17,13 +17,16 @@ const Match = (props) => {
         if (lat === false && long === false){
           // Execute the created function directly
           Axios.get('https://api.ipify.org?format=json').then((res) => {
-            Axios.get(
-              `https://cors-anywhere.herokuapp.com/https://tools.keycdn.com/geo.json?host=${res.data.ip}`
-            ).then((res) => {
-              console.log('with ip adress')
-              setLat(res.data.data.geo.latitude)
-              setLong(res.data.data.geo.longitude)
-            })
+            // API TO GET IP OF THE USERS
+            console.log(res);
+            // API TO GET LAT AND LONG BY IP ADRESSE
+            // Axios.get(
+            //   `https://cors-anywhere.herokuapp.com/https://tools.keycdn.com/geo.json?host=${res.data.ip}`
+            // ).then((res) => {
+            //   console.log('with ip adress')
+            //   setLat(res.data.data.geo.latitude)
+            //   setLong(res.data.data.geo.longitude)
+            // })
           })
         }
       }, 1000)

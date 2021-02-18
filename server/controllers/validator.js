@@ -50,8 +50,8 @@ exports.validationInput = (req, res, next) => {
   if (req.body.age === '') dataErr.validAge = 'Enter Your Age'
   // if this is some erro comment this line
 
-  if (req.body.tag === undefined || req.body.tag.length === 0)
-    dataErr.validTag = 'Enter a valid tag'
+  // if (req.body.tag === undefined || req.body.tag.length === 0)
+  //   dataErr.validTag = 'Enter a valid tag'
 
   if (
     regExpName.test(req.body.firstName) &&

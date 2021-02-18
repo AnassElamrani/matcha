@@ -161,21 +161,18 @@ class Login extends Component {
         password: this.state.password,
       })
       .then((response) => {
-        console.log(response)
         if (response.data.status === "fail")
           this.setState({ errMsg: response.data.toSend });
         else if (response.data.status === "success" && response.data.verified === false) {
           this.setState({ errMsg: response.data.toSend });
         }
         else if (response.data.status === "success" && response.data.verified === true) {
-          console.log('login success')
           this.setState({ redirect: "/" });
         }
       });
   };
 
   componentDidMount() {
-    console.log('render')
     Axios.get("http://localhost:3001/users/checkLogin", {
       withCredentials: true,
     })
@@ -188,7 +185,6 @@ class Login extends Component {
   }
 
   componentDidUpdate() {
-    console.log('update')
     if (this.state.redirect) {
       this.props.login();
       history.push("/");

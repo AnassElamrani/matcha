@@ -8,7 +8,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <Init />
-      </React.Fragment>   
+      </React.Fragment>
     )
   }
 }

@@ -16,13 +16,38 @@ module.exports = class Geo {
   }
 
   static getLatLong(id) {
-    return db.execute('SELECT * FROM location WHERE users_id = ?', [id])
+    return db.execute(
+      'SELECT l.lat, l.long, u.type FROM location l INNER JOIN users u on u.id = l.users_id WHERE l.users_id = ?',
+      [id]
+    )
   }
 
-  static getAll(cord ,id){
+  static getAll(cord, gender, id) {
+    let setGender
+    if (gender === 'Other') setGender = `u.gender = 'Male' OR u.gender = "Women"`
+    else setGender = `u.gender = "${gender}"`
     return db.execute(
-      'SELECT u.id, u.userName, u.firstName, u.lastName, u.age, u.bio, ST_Distance_Sphere(point(?, ?), point (l.lat , l.long)) / 1000 AS km from users as u INNER JOIN location as l on u.id = l.users_id WHERE u.id <> ? ORDER By ST_Distance_Sphere(point(?,?), point (l.lat , l.long)) / 1000 ASC',
-      [cord[0], cord[1], id, cord[0], cord[1]]
+      `SELECT DISTINCT(u.id), u.fameRating, l.city, u.gender, u.userName, u.firstName, u.lastName, u.age, u.bio, ST_Distance_Sphere(point(?, ?), point (l.lat , l.long)) / 1000 AS km , (SELECT COUNT(*) from tag_user t1 INNER JOIN tag_user t2 ON t1.tag_id = t2.tag_id WHERE t1.users_id = ? AND t2.users_id = u.id) as tag, (SELECT GROUP_CONCAT(image ORDER BY pointer ASC SEPARATOR ',') from imgProfil i WHERE i.users_id = u.id) as images from users as u INNER JOIN location as l on u.id = l.users_id INNER JOIN imgProfil as i1 on u.id = i1.users_id WHERE u.id <> ? AND ${setGender} AND NOT EXISTS (SELECT * from likes lk WHERE ? = lk.liker AND u.id = lk.liked) AND NOT EXISTS (SELECT * from blocked bl WHERE ? = bl.blocker AND u.id = bl.blocked) ORDER By u.age , km ASC, u.fameRating DESC, tag DESC`,
+      [cord[0], cord[1], id, id, id, id]
     )
+  }
+
+  static updateGeo(data) {
+    return db.execute(
+      'UPDATE location SET city = ?, lat = ?, `long` = ? WHERE users_id = ?',
+      [data.city, data.latlng.lat, data.latlng.lng, data.id]
+    )
+  }
+
+
+  static updateLatlng(data) {
+    return db.execute(
+      'UPDATE location SET lat = ?, `long` = ? WHERE users_id = ?',
+      [data.latlng.lat, data.latlng.lng, data.id]
+    )
+  }
+
+  static checkLocIs(id){
+    return db.execute('SELECT * FROM location WHERE users_id = ?', [id])
   }
 }

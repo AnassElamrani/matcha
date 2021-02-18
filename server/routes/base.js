@@ -1,8 +1,7 @@
 const homeController = require("../controllers/home");
 const validator = require("../controllers/validator");
 const authVrfy = require("../middleware/autMiddleware");
-const Helpers = require("../util/Helpers");
-var multer = require('multer')
+// const Helpers = require("../util/Helpers");
 
 const express = require("express");
 const route = express.Router();
@@ -10,7 +9,6 @@ const route = express.Router();
 // Get home [page]
 
 route.get("/base", authVrfy.getUserInfos);
-// route.get("/base", (req, res, next) => {console.log("bz");res.json({ss:'ss'});next()});
 
 //continue with this part
 
@@ -39,10 +37,6 @@ route.post(
 );
 
 // post fill profil
-// for uploading multiple images
-// multiple images upload.array('images', 100)
-// single images
-// upload.single("myImage")
 
 route.post(
   "/base/profil/:id",
@@ -52,17 +46,15 @@ route.post(
 
 // add img
 
-// route.post(
-//   '/base/img/:id',
-//   [Helpers.upload.array('myImage', 5)],
-//   homeController.fillImg
-// )
 route.post('/base/img/:id', homeController.multerUpload)
 
 route.post('/base/img/dnd/:id', homeController.dnd)
 
 route.post('/base/img/fetch/:id', homeController.fetchImgs)
 
+route.post('/base/dltImg/:id', homeController.dltImg)
+
+route.post('/base/onlyImg/:id', homeController.onlyImg)
 
 // get all tags [POST]
 
@@ -76,9 +68,16 @@ route.get("/upload/:filename", homeController.getImges)
 
 route.post('/base/check/:id', homeController.checkIs)
 
+// check if stepper not null
+
+route.post('/base/check1/:id', homeController.checkIs1)
+
 // localistation
 
 route.post('/base/localisation/:id', homeController.geo)
 
+// Update localistion
+
+route.post('/base/updateGeo/:id', homeController.updateLoc)
 
 module.exports = route;

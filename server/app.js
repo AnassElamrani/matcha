@@ -25,9 +25,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // Images ***************************************************
 // need help of package path
-// const path = require('path');
+const path = require('path');
 // static folder to thing like image ...
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/upload')));
+// console.log(express.static(path.join(__dirname, 'public'))
 //**********************************************************
 
 // parse application/json

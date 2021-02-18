@@ -5,16 +5,6 @@ const Geo = require('../models/geoData')
 const Helpers = require("../util/Helpers");
 const fs = require("fs");
 const path = require("path");
-// res.locals work like $_SESSION['name']....
-
-// Home controller
-
-exports.index = (req, res, next) => {
-  res.locals.user[0].map((el) => {
-    console.log(res.locals.user[0]);
-    res.json(res.locals.user[0]);
-  });
-};
 
 // edit information if user want that
 
@@ -139,20 +129,6 @@ exports.fillProfil = async (req, res, next) => {
   }
 };
 
-// exports.fillImg = async (req, res, next) => {
-//   const {data} = {...res.locals}
-//   if(data.errors == "" && data.index != "undefined")
-//   {
-//     console.log('data', data);
-//     console.log('res.locals', {...res.locals})
-//     // new Img(data.)
-//     // var ret = Img.save();
-//   }
-//   else {
-//   }
-//   res.json('abc')
-// }
-
 exports.tags = async (req, res) => {
   var data = {};
   await Tag.getAllTag(req.params.id).then(([res]) => {
@@ -179,6 +155,7 @@ exports.getImges = (req, res) => {
   });
 };
 
+// check for edit profil
 
 exports.checkIs = (req, res) => {
   User.CheckIfE(req.params.id).then(([is]) => {
@@ -189,91 +166,139 @@ exports.checkIs = (req, res) => {
   })
 }
 
-exports.geo = async (req, res) => {
+// check for stepper
+
+exports.checkIs1 = (req, res) => {
+  User.CheckIfE(req.params.id).then(([is]) => {
+    if (!is.length) {
+      res.json({ status: true })
+    }else
+      res.json({ status: false })
+  })
+}
+
+exports.geo = (req, res) => {
   var data = {},
     data = { ...req.body }
   data.id = req.params.id
-  // const { lat, long } = req.body;
-  let word, lat, long
-  // res.json(Helpers.geoLocal(lat, long));
-  await Helpers.geoLocal(data.lat, data.long).then(city => {
-    city.map(el => {
-      word = el.city.split(' ')
-      // insert into info geo user into db 
-      const geo = new Geo(null, data.id, word[0], data.lat, data.long)
-      geo.save();
-    })
+  let word
+
+  Geo.checkLocIs(data.id).then(([res]) => {
+    if (!res.length){
+      Helpers.geoLocal(data.lat, data.long).then(city => {
+        city.map(el => {
+          word = el.city.split(' ')
+          const geo = new Geo(null, data.id, word[0], data.lat, data.long)
+          geo.save();
+        })
+      })
+    }
   })
-  res.json(word[0])
 }
 
+// update locallisation
 
-exports.multerUpload = 
-    (req, res, next) => {
+exports.updateLoc = async (req, res) => {
+  // call Geo.updateGeo
+  var data = {},
+    data = { ...req.body }
+  data.id = req.params.id
 
-      Helpers.upload(req, res, (err) => {
-      const go = async () => {
-      // console.log('formData', req.body.index);
+  await Helpers.geoLocal(data.latlng.lat, data.latlng.lng).then(city => {
+    city.map(el => {
+      if (el.city !== undefined){
+        word = el.city.split(' ')
+        data.city = word[0]
+        Geo.updateGeo(data)
+      }
+    })
+  }).catch(() => Geo.updateLatlng(data));
+
+  res.json(data.city)
+  // console.log(data)
+  // await Geo.updateGeo(data).then(city => {
+  //   res.json({status: true})
+  // })
+}
+
+exports.multerUpload = (req, res, next) => {
+  Helpers.upload(req, res, (err) => {
+    const go = async () => {
       const data = {};
-      // console.log('2', {...req.file})
       if(err){
         data.msg = "Error Has Occured";
         data.errors = err;
-        // console.log('error:' ,err)
-        // res.json({
-          //   msg: err
-          // });
+      } else {
+        if(req.file == undefined){
+          data.msg = "No File Selected!"
+          data.errors = "";
         } else {
-
-          if(req.file == undefined){
-            // res.json({
-              //   msg: 'Error: No File Selected!'
-              // });
-              data.msg = "No File Selected!"
-              data.errors = "";
-              
-            } else {
-              console.log('req.file', req.file.filename)
-              data.msg = "File Uploaded!"
-              data.errors = "";
-              data.index = req.body.index;
-              checkIm = await Img.checkImg(req.body.userId, req.body.index);
-              console.log('checkIm', checkIm[0]);
-              if(checkIm[0].length == 0)
-              {
-                image = new Img(null, req.body.userId, req.file.filename, req.body.index)
-                await image.save()
-              } else {
-                var updated = await Img.updateImg(req.body.userId, req.file.filename, req.body.index);
-                console.log('updated', updated[0]);
-              }
-              // res.json( {
-                //   msg: 'File Uploaded!', req: req.file
-                //   // file: `uploads/${req.file.filename}`
-                // });
-              }
+          data.msg = "File Uploaded!"
+          data.errors = "";
+          data.index = req.body.index;
+          checkIm = await Img.checkImg(req.body.userId, req.body.index);
+          if(checkIm[0].length == 0)
+          {
+            image = new Img(null, req.body.userId, req.file.filename, req.body.index)
+            await image.save()
+          } else
+            await Img.updateImg(req.body.userId, req.file.filename, req.body.index);
         }
-            data.userId = req.body.userId
-            res.json({data: data})
-            res.locals.data = data;
-            next();
-            console.log('here', data)
-          }
-          go();
-          }
-          )
-  }
+      }
+      data.userId = req.body.userId
+      res.json({data: data})
+      res.locals.data = data;
+      next();
+    }
+    go();
+  })
+}
 
-  exports.dnd = async (req, res, next) => {
-    console.log('-')
-    console.log('dnd', req.body)
-    res.json({ops :'DnD'});
-    var changeIndex = await Img.updateImgPointer(req.body.index, req.body.id)
-  }
 
-  exports.fetchImgs  = async (req, res, next) => {
-    const total = await Img.ImgsTotalNumber(req.body.userId);
-    console.log('len', total[0].length);
-    console.log('total', total[0])
-    res.json({s:total[0].length})
-  }
+exports.dnd = async (req, res, next) => {
+  console.log('-')
+  console.log('dnd', req.body)
+  res.json({ops :'DnD'});
+  var changeIndex = await Img.updateImgPointer(req.body.index, req.body.id)
+}
+
+// get number of images saved in db
+
+exports.fetchImgs  = async (req, res, next) => {
+  const total = await Img.ImgsTotalNumber(req.body.userId);
+  res.json({s:total[0].length})
+}
+
+// delete all stepper part
+
+exports.dltImg = async (req, res, next) => {
+  const { id } = req.params
+  Img.selectImg(id).then(([res]) => {
+    res.map((el) => {
+      const uploadDerictory = path.join('public/upload')
+      var fs = require('fs')
+      var filePath = uploadDerictory + '/' + el.image
+      fs.unlinkSync(filePath)
+    })
+  })
+  await Img.DeleteImages(id)
+  await User.DeleteProfilInfo(id)
+  await Tag.DeleteTags(id)
+  res.json({ status: true })
+}
+
+// delete just the images stepper part
+
+exports.onlyImg = async (req, res, next) => {
+  const { id } = req.params
+  Img.selectImg(id).then(([res]) => {
+    res.map((el) => {
+      const uploadDerictory = path.join('public/upload')
+      var fs = require('fs')
+      var filePath = uploadDerictory + '/' + el.image
+      fs.unlinkSync(filePath)
+    })
+  })
+  await Img.DeleteImages(id)
+  res.json({ status: true })
+}

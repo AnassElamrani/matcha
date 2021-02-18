@@ -109,12 +109,9 @@ exports.postLogin = async (req, res, next) => {
       if (user.length) {
         user.map((el) => {
           if (Helpers.cmpBcypt(req.body.password, el.password)) {
-            // console.log('verify : ' , verify);
             if(verify === false)
-            {
-              console.log("\n+++\n");
               dataErr.errorGlobal = "Please Verify Your account from the link we sent you in you mailbox"; 
-            } else {
+            else {
               try {
                 const token = createtoken(el.id);
                 res.cookie("jwt", token, {
@@ -288,4 +285,20 @@ exports.intraCallback = (req, res, next) => {
   res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
   res.redirect('http://localhost:3000/Login');
   (req, res, next)
+};
+
+// Controller to check if The user Filled all the required personal Informations
+
+exports.userInfoVerification = async (req, res) => {
+  console.log('ooooo')
+  var id = req.body.userId;
+  await User.CheckRequiredUserInfo(id).then((response) => {
+    if(response[0] != undefined && response[0].length != 0)
+    res.json({status: true});
+    else 
+    res.json({status: false});
+    console.log('response', response[0])
+    // res.json({flag: "wewewewe"})
+  })
+  .catch(err => console.log('checkReuired..Error', err));
 };

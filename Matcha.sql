@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.99.101
--- Generation Time: Feb 18, 2021 at 04:13 PM
+-- Generation Time: Feb 18, 2021 at 06:51 PM
 -- Server version: 8.0.23
 -- PHP Version: 7.4.15
 
@@ -45,13 +45,6 @@ CREATE TABLE `blocked` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `blocked`
---
-
-INSERT INTO `blocked` (`id`, `blocker`, `blocked`, `dlt`, `created_at`) VALUES
-(1, 1, 2, 1, '2021-02-18 16:08:47');
-
 -- --------------------------------------------------------
 
 --
@@ -72,7 +65,10 @@ CREATE TABLE `history` (
 INSERT INTO `history` (`id`, `visitor_id`, `visited_id`, `created_at`) VALUES
 (1, 1, 2, '2021-02-18 15:56:56'),
 (2, 1, 5, '2021-02-18 15:57:03'),
-(3, 1, 19, '2021-02-18 16:00:42');
+(3, 1, 19, '2021-02-18 16:00:42'),
+(4, 1, 3, '2021-02-18 17:26:21'),
+(5, 1, 4, '2021-02-18 18:14:24'),
+(6, 1, 6, '2021-02-18 18:29:41');
 
 -- --------------------------------------------------------
 
@@ -200,6 +196,13 @@ CREATE TABLE `likes` (
   `liked` int NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`id`, `liker`, `liked`, `created_at`) VALUES
+(8, 1, 6, '2021-02-18 18:42:27');
 
 -- --------------------------------------------------------
 
@@ -464,7 +467,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `oauth_id`, `email`, `userName`, `firstName`, `lastName`, `password`, `vkey`, `verify`, `age`, `gender`, `type`, `bio`, `fameRating`) VALUES
 (1, NULL, 'hassanseffiani@gmail.com', 'hsf', 'hsf', 'killer', '$2b$10$D5ea72JMufBMzhERPMKGE.c0Ec1UGYV4vU2ubC5UM519CrKHNlG8q', '8ed36dad89cc210327dc5f1bf7b125af8257cb2d17fdeed0a5a35363c18d91ed', 1, 18, 'Male', 'Other', 'Biography for user1', 1),
-(2, NULL, 'hassanseffiani1@gmail.com', 'hsf1', 'hsf', 'killer', '$2b$10$0aytWTd9Oo9PPtQIWGgofeiGtYkXnOJ0fjIVzrdrPoKoToTRx8NSW', '38f5a1f3990219e246ba81c0b44e38d0011225e74fea1c7ff7aba97f9e5e6eee', 1, 19, 'Women', 'Male', 'Biography for user2', 1),
+(2, NULL, 'hassanseffiani1@gmail.com', 'hsf1', 'hsf', 'killer', '$2b$10$0aytWTd9Oo9PPtQIWGgofeiGtYkXnOJ0fjIVzrdrPoKoToTRx8NSW', '38f5a1f3990219e246ba81c0b44e38d0011225e74fea1c7ff7aba97f9e5e6eee', 1, 22, 'Women', 'Male', 'Biography for user2', 1),
 (3, NULL, 'hassanseffiani2@gmail.com', 'hsf2', 'hsf', 'killer', '$2b$10$1ObGsxs1JuJSGlVC5sRgnOFReiW3RnZ8G7zGuK1hwp91SQq1UuJJe', '6728794d2be2ee19a7cc92edd3667ba692666bf6320d8533a479d8de1070e7b1', 1, 20, 'Male', 'Women', 'Biography for user3', 1),
 (4, NULL, 'hassanseffiani3@gmail.com', 'hsf3', 'hsf', 'killer', '$2b$10$07mGEi/zHYm9kSV.pQqn9u/n5xYMhRoPgVI3/lMqXoyXbIUIe/u2m', 'dc2c19b64d0a577c53e31241e2c7a9ba252c33b43accf00ba1b59d2956914601', 1, 21, 'Women', 'Male', 'Biography for user4', 1),
 (5, NULL, 'hassanseffiani4@gmail.com', 'hsf4', 'hsf', 'killer', '$2b$10$7beU0B32KM99ymOXv/Dpde52.CYFW68lTRMVVdR3/ilp8CPaSMwCS', 'f42561845afb82441da46e8c171e68e1dccbcbb019781f9d09b48ff7fd56e0e1', 1, 22, 'Male', 'Women', 'Biography for user5', 1),
@@ -556,13 +559,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `blocked`
 --
 ALTER TABLE `blocked`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `imgProfil`
@@ -574,7 +577,7 @@ ALTER TABLE `imgProfil`
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `location`

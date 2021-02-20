@@ -31,9 +31,9 @@ import { About } from "./About"
 import Browsing from "../../browsing/browsing"
 import Home from "../../profil/Home"
 import EditProfil from "../../profil/editProfill"
-// import Setting from "../../profil/setting"
-// import History from "../../history/history"
-// import ImgTest from "../../browsing/fetchImg"
+import Setting from "../../profil/setting"
+import History from "../../history/history"
+import ImgTest from "../../browsing/fetchImg"
 
 const instance = Axios.create({ withCredentials: true });
 
@@ -83,63 +83,65 @@ const ResponsiveDrawer = (props) => {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [id, setId] = React.useState("");
-  // const [lat, setLat] = React.useState(false);
-  // const [long, setLong] = React.useState(false);
-  const [requiredProfilInfo, setRPI] = React.useState(false);
+  const [lat, setLat] = React.useState(false);
+  const [long, setLong] = React.useState(false);
+  const [requiredProfilInfo, setRPI] = React.useState("");
+  const [route, setRoute] = React.useState('/');
 
-  // navigator.geolocation.getCurrentPosition((position) => {
-  //   setLat(position.coords.latitude);
-  //   setLong(position.coords.longitude);
-  // });
-
+  navigator.geolocation.getCurrentPosition((position) => {
+    setLat(position.coords.latitude);
+    setLong(position.coords.longitude);
+  });
   const func = async () => {
     await instance
-      .get("http://localhost:3001/base")
-      .then((response) => {
-        console.log('Id from response ----->', response.data.user.id)
-        if (response.data.user.id !== undefined) {
-          setId(response.data.user.id);
-        }
-      }, (err) => {})
+    .get("http://localhost:3001/base")
+    .then((response) => {
+      console.log('Id from response ----->', response.data.user.id)
+      if (response.data.user.id !== undefined) {
+        setId(response.data.user.id);
+      }
+    }, (err) => {})
     if (id !== "") {
       console.log('id', id)
       instance.post("http://localhost:3001/user/userInfoVerification", { userId: id })
-        .then((res) => {
-          if (res.data.status === true) {
-            setRPI(true)
-          }
-          else
-            setRPI(false)
-        }, (err) => {})
+      .then((res) => {
+        if (res.data.status === true) {
+          setRPI(true)
+        }
+        else
+        setRPI(false)
+      }, (err) => {})
     }
   }
-
+  
   React.useEffect(() => {
     func();
     console.log('Myuseffect')
-  }, [requiredProfilInfo]);
+    if(requiredProfilInfo)
+    console.log('RPI', requiredProfilInfo);
+  });
+  
+  const getLocIp = React.useCallback(() => {
+    // get locallization with help of ip
+    Axios.get('https://api.ipify.org?format=json').then(async (res) => {
+      // console.log(res.data.ip)
+      await Axios.get(`http://ip-api.com/json/${res.data.ip}`).then(res => {
+        console.log(res.data)
+        setLat(res.data.lat);
+        setLong(res.data.lon);
+      })
+      if (id) Axios.post(`base/localisation/${id}`, { lat: lat, long: long });
+    })
+  }, [id, lat, long])
 
-  // const getLocIp = React.useCallback(() => {
-  //   // get locallization with help of ip
-  //   Axios.get('https://api.ipify.org?format=json').then(async (res) => {
-  //     // console.log(res.data.ip)
-  //     await Axios.get(`http://ip-api.com/json/${res.data.ip}`).then(res => {
-  //       console.log(res.data)
-  //       setLat(res.data.lat);
-  //       setLong(res.data.lon);
-  //     })
-  //     if (id) Axios.post(`base/localisation/${id}`, { lat: lat, long: long });
-  //   })
-  // }, [id, lat, long])
-
-  // React.useEffect(() => {
-  //   // save the localization here
-  //   if (lat === false && long === false) {
-  //     // hta l push after enablet
-  //     // getLocIp()
-  //   } else
-  //     if (id) Axios.post(`base/localisation/${id}`, { lat: lat, long: long });
-  // }, [id, lat, long, getLocIp]);
+  React.useEffect(() => {
+    // save the localization here
+    if (lat === false && long === false){
+      // hta l push after enablet
+      // getLocIp()
+    }else
+      if (id) Axios.post(`base/localisation/${id}`, { lat: lat, long: long });
+  }, [id, lat, long, getLocIp]);
 
   const handelLogout = () => {
     instance.post("http://localhost:3001/logout");
@@ -149,12 +151,14 @@ const ResponsiveDrawer = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
   const itemsListOne = [
     {
       text: "Fill Profile",
       icon: <FaHome />,
       onClick: () => history.push("/"),
-      disabled: requiredProfilInfo
+      disabled: requiredProfilInfo,
+      hidden: true
     },
     {
       text: "browsing",
@@ -203,13 +207,16 @@ const ResponsiveDrawer = (props) => {
       <Divider />
       <List>
         {itemsListOne.map((item, index) => {
-          const { text, icon, onClick, disabled } = item;
+          const { text, icon, onClick, disabled, hidden } = item;
+          if(!hidden)
+          {
           return (
-            <ListItem button key={text} disabled={disabled} onClick={onClick}>
+              <ListItem button key={text} disabled={disabled}  onClick={onClick}>
               <ListItemText primary={text} />
               {icon && <ListItemIcon>{icon}</ListItemIcon>}
-            </ListItem>
+              </ListItem>
           );
+        }
         })}
       </List>
       <Divider />
@@ -285,11 +292,16 @@ const ResponsiveDrawer = (props) => {
         <Switch>
           <Route exact path="/edit/:id" component={EditProfil} />
           <Route exact path="/browsing/:id" component={Browsing} />
-          {/* <Route exact path="/ImgTest/:id" render={(props) => <ImgTest id={id} />} /> */}
-          {/* <Route exact path="/history/:id" component={History} /> */}
-          {/* <Route exact path="/setting" component={(props) => <Setting id={id} />} /> */}
+          <Route exact path="/ImgTest/:id" render={(props) => <ImgTest id={id} />} />
+          <Route exact path="/history/:id" component={History} />
+          <Route exact path="/setting" component={(props) => <Setting id={id} />}/>
           <Route exact path="/about" component={About} />
-          <Route exact path="/" render={(props) => <Home id={id} />} />
+          {
+            (requiredProfilInfo === true ) ?
+            <Route exact path="/" component={About}  />
+            :
+            <Route exact path="/" render={(props) => <Home id={id} />} />
+          }
         </Switch>
       </main>
     </div>

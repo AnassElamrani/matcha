@@ -6,6 +6,7 @@ import SortComponent from './sort'
 import clsx from 'clsx'
 import Profil from './profil'
 import Map from "./map"
+import Search from './search'
 import {
   Card,
   CardHeader,
@@ -57,10 +58,6 @@ const useStyles = makeStyles((theme) => ({
   expandOpen: {
     transform: 'rotate(180deg)',
   },
-  avatar: {
-    width: '2vw',
-    marginRight: '100%', // 16:9
-  },
 }))
 
 const Browsing = (props) => {
@@ -71,28 +68,30 @@ const Browsing = (props) => {
   const [list1, setList1] = React.useState([])
 
   const getLocalisation = React.useCallback(async () => {
-    await Axios.post(`/browsing/geo/${props.match.params.id}`).then((res) => {
+    await Axios.post(`/browsing/geo/${props.id}`).then((res) => {
       setGender(res.data.type)
       setCord(res.data.geo)
     })
-  }, [props.match.params.id])
+  }, [props.id])
 
   React.useEffect(() => {
     if (cord.length) {
-      console.log("test")
-      Axios.post(`/browsing/${props.match.params.id}`, {
+      Axios.post(`/browsing/${props.id}`, {
         cord: cord,
         gender: gender,
       }).then((res) => {
-        setList(res.data)
-        setList1(res.data)
+        if (res.data){
+          setList(res.data)
+          setList1(res.data)  
+        }
       })
     } else getLocalisation()
-  }, [cord, gender, getLocalisation, props.match.params.id])
+  }, [cord, gender, getLocalisation, props.id])
 
   const handelLike = (event, idLiker, idLiked) => {
     event.preventDefault()
     Axios.post(`/browsing/likes/${idLiker}`, {idLiked: idLiked}).then(res => {
+      console.log(res)
       if (res.data.status) {
         const newList = list1.filter((item) => item.id !== idLiked)
         setList1(newList)
@@ -110,118 +109,100 @@ const Browsing = (props) => {
     })
   }
 
-  // const handelTest = (e) => {
-  //   setList1(list1.sort((a, b) => {return a.age - b.age}))
-  //   // setList(list1.sort((a, b) => a.age - b.age))
-  //   // setList([])
-  //   console.log(list1)
-  // }
-
   return (
     <div className={classes.diva}>
-      <Grid container className={classes.container} spacing={6}>
-        <Grid item xs={3}>
-          {/* <button onChange={handelTest}>sort</button> */}
+      <Grid
+        container
+        className={classes.container}
+        justify='center'
+        alignItems='center'
+      >
+        <Grid iterm xs={12} sm={2}>
           <SortComponent setList={setList1} list={list1} />
         </Grid>
-        <Grid item xs={5}>
-          <Filter setList1={setList1} list={list} />
-        </Grid>
-        <Grid item xs={4}>
+        <Grid iterm xs={12} sm={2}>
           <Map list={list1} />
         </Grid>
-          <Container className={classes.copy} component='main' maxWidth='xs'>
-            <Grid item xs={12}>
-              {list1 &&
-                list1
-                  .map((el, key) => {
-                    const imageProfil = el.images.split(',')
-                    return (
-                      <Box m={2}>
-                        <Card key={key} className={classes.root}>
-                          <CardHeader
-                            avatar={
-                              <Avatar
-                                aria-label='recipe'
-                                className={classes.avatar}
-                                src={`http://localhost:3001/${imageProfil[0]}`}
-                                alt='test'
-                              ></Avatar>
-                            }
-                            action={
-                              <IconButton aria-label='settings'>
-                                <Profil
-                                  visitor={props.match.params.id}
-                                  visited={el.id}
-                                  element={el}
-                                />
-                              </IconButton>
-                              // add the ppop up component here so show profil and added to history table databse
-                            }
-                            title={el.userName}
-                            subheader={el.firstName + ' ' + el.lastName}
-                          />
-                          <CardContent>
-                            <Typography variant='h6'>Biography :</Typography>
-                            <Typography
-                              variant='body2'
-                              color='textSecondary'
-                              component='p'
-                            >
-                              {el.bio}
-                            </Typography>
-                          </CardContent>
-                          <CardActions disableSpacing>
-                            <IconButton
-                              aria-label='add to favorites'
-                              onClick={(event) =>
-                                handelLike(event, props.match.params.id, el.id)
-                              }
-                            >
-                              <Favorite />
-                            </IconButton>
-                            <IconButton
-                              className={clsx(classes.expand)}
-                              aria-label='NotInterested'
-                              onClick={(event) =>
-                                handelDeslike(event, props.match.params.id, el.id)
-                              }
-                            >
-                              <NotInterested />
-                            </IconButton>
-                            {/* <IconButton
-                              className={clsx(classes.expand, {
-                                [classes.expandOpen]: expanded,
-                              })}
-                              onClick={handleExpandClick}
-                              aria-expanded={expanded}
-                              aria-label='show more'
-                            >
-                              <ExpandMore />
-                            </IconButton> */}
-                          </CardActions>
-                          {/* <Collapse in={expanded} timeout='auto' unmountOnExit> */}
-                          {/* <CardContent>
-                              <Typography paragraph>More :</Typography>
-                              {'Age: ' +
-                                el.age +
-                                ' distance: ' +
-                                el.km.toFixed(2) +
-                                'km  gender :' +
-                                el.gender +
-                                ' CITY : ' +
-                                el.city}
-                            </CardContent> */}
-                          {/* </Collapse> */}
-                        </Card>
-                      </Box>
-                    )
-                  })
-                  .splice(0, 20)}
-              </Grid>
-            </Container>
+        <Grid item xs={12} sm={2}>
+          <Search
+            setList={setList}
+            setList1={setList1}
+            cord={cord}
+            gender={gender}
+            id={props.id}
+          />
         </Grid>
-      </div>
+        <Grid item xs={12} sm={5}>
+          <Filter setList1={setList1} list={list} />
+        </Grid>
+        <Container className={classes.copy} component='main' maxWidth='xs'>
+          <Grid item xs={12} sm={12}>
+            {list1 &&
+              list1
+                .map((el, key) => {
+                  const imageProfil = el.images.split(',')
+                  return (
+                    <Box m={2}>
+                      <Card key={key} className={classes.root}>
+                        <CardHeader
+                          avatar={
+                            <Avatar
+                              aria-label='recipe'
+                              src={`http://localhost:3001/${imageProfil[0]}`}
+                              alt={`test${imageProfil[0]}`}
+                            ></Avatar>
+                          }
+                          action={
+                            <IconButton aria-label='settings'>
+                              <Profil
+                                visitor={props.id}
+                                visited={el.id}
+                                element={el}
+                              />
+                            </IconButton>
+                          }
+                          title={el.userName}
+                          subheader={el.firstName + ' ' + el.lastName}
+                        />
+                        <CardContent>
+                          <Typography variant='h6'>Biography :</Typography>
+                          <Typography
+                            variant='body2'
+                            color='textSecondary'
+                            component='p'
+                          >
+                            {el.bio}
+                          </Typography>
+                        </CardContent>
+                        <CardActions disableSpacing>
+                          <IconButton
+                            aria-label='add to favorites'
+                            onClick={(event) =>
+                              handelLike(event, props.id, el.id)
+                            }
+                          >
+                            <Favorite />
+                          </IconButton>
+                          <IconButton
+                            className={clsx(classes.expand)}
+                            aria-label='NotInterested'
+                            onClick={(event) =>
+                              handelDeslike(event, props.id, el.id)
+                            }
+                          >
+                            <NotInterested />
+                          </IconButton>
+                        </CardActions>
+                      </Card>
+                    </Box>
+                  )
+                })
+                // .splice(0,20)
+                }
+          </Grid>
+        </Container>
+      </Grid>
+    </div>
   )
 }
 

@@ -116,3 +116,18 @@ exports.allImg = async (req, res, next) => {
   })
   res.json(base64)
 }
+
+exports.search = async (req, res, next) => {
+  const { cord, gender, value, rating, geo, tag } = req.body
+  const { id } = req.params
+  var data = []
+
+  await Geo.searchUsers(cord, gender, id, value, rating, geo, tag)
+    .then(([res]) => {
+      res.map((el) => {
+        data.push(el)
+      })
+    })
+    .catch((err) => console.log(err))
+  res.json(data)
+}

@@ -56,9 +56,13 @@ route.post('/base/dltImg/:id', homeController.dltImg)
 
 route.post('/base/onlyImg/:id', homeController.onlyImg)
 
+// ??
+
+route.post('/base/tag/:id', homeController.tags)
+
 // get all tags [POST]
 
-route.post("/base/tag/:id", homeController.tags);
+route.post('/base/alltag/:id', homeController.allTags)
 
 // get all images
 

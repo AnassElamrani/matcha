@@ -287,7 +287,6 @@ exports.intraCallback = (req, res, next) => {
   (req, res, next)
 };
 
-
 // Controller to check if The user Filled all the required personal Informations
 
 exports.userInfoVerification = async (req, res) => {

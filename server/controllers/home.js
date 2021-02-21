@@ -139,6 +139,16 @@ exports.tags = async (req, res) => {
   res.json(data);
 };
 
+exports.allTags = async (req, res, next) => {
+  var data = {}
+  await Tag.cmpIdTag(req.params.id).then(([res]) => {
+    data = res.map((el, iKey) => {
+      return { key: iKey, name: el.name }
+    })
+  })
+  res.json(data)
+}
+
 exports.getImges = (req, res) => {
   const uploadDerictory = path.join("public/upload");
   console.log(uploadDerictory);

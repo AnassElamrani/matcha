@@ -31,4 +31,8 @@ route.post('/browsing/getHistory/:id', Browsing.getHsitory)
 
 route.post('/browsing/fetchAllImg/:id', Browsing.allImg)
 
+// search for users
+
+route.post('/browsing/search/:id', Browsing.search)
+
 module.exports = route

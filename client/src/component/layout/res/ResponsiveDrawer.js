@@ -92,6 +92,7 @@ const ResponsiveDrawer = (props) => {
     setLat(position.coords.latitude);
     setLong(position.coords.longitude);
   });
+
   const func = async () => {
     await instance
     .get("http://localhost:3001/base")
@@ -120,7 +121,7 @@ const ResponsiveDrawer = (props) => {
     if(requiredProfilInfo)
     console.log('RPI', requiredProfilInfo);
   });
-  
+
   const getLocIp = React.useCallback(() => {
     // get locallization with help of ip
     Axios.get('https://api.ipify.org?format=json').then(async (res) => {
@@ -153,17 +154,20 @@ const ResponsiveDrawer = (props) => {
   };
 
   const itemsListOne = [
-    {
-      text: "Fill Profile",
-      icon: <FaHome />,
-      onClick: () => history.push("/"),
-      disabled: requiredProfilInfo,
-      hidden: true
-    },
+    { text: "Home", icon: <FaHome />, onClick: () => history.push("/"),
+    hidden: true,
+    disabled: requiredProfilInfo },
     {
       text: "browsing",
       icon: <FaHotjar />,
       onClick: () => history.push(`/browsing/${id}`),
+      disabled: !requiredProfilInfo,
+      
+    },
+    {
+      text: "ImgTest",
+      icon: <FaHotjar />,
+      onClick: () => history.push(`/ImgTest/${id}`),
       disabled: !requiredProfilInfo
     },
     {
@@ -178,13 +182,13 @@ const ResponsiveDrawer = (props) => {
       onClick: () => history.push(`/history/${id}`),
       disabled: !requiredProfilInfo
     },
-
-    // {
-    //   text: "Setting",
-    //   icon: <FaRegSun />,
-    //   onClick: () => history.push("/setting"),
-    //   disabled: !requiredProfilInfo
-    // },
+    
+    {
+      text: "Setting",
+      icon: <FaRegSun />,
+      onClick: () => history.push("/setting"),
+      disabled: !requiredProfilInfo
+    },
     {
       text: "About",
       icon: <FaInfoCircle />,
@@ -210,11 +214,12 @@ const ResponsiveDrawer = (props) => {
           const { text, icon, onClick, disabled, hidden } = item;
           if(!hidden)
           {
-          return (
-              <ListItem button key={text} disabled={disabled}  onClick={onClick}>
+
+            return (
+              <ListItem button key={text} disabled={disabled} onClick={onClick}>
               <ListItemText primary={text} />
               {icon && <ListItemIcon>{icon}</ListItemIcon>}
-              </ListItem>
+            </ListItem>
           );
         }
         })}
@@ -291,16 +296,16 @@ const ResponsiveDrawer = (props) => {
         <div className={classes.toolbar} />
         <Switch>
           <Route exact path="/edit/:id" component={EditProfil} />
-          <Route exact path="/browsing/:id" component={Browsing} />
+          <Route exact path="/browsing/:id" render={(props) => <Browsing id={id} />} />
           <Route exact path="/ImgTest/:id" render={(props) => <ImgTest id={id} />} />
           <Route exact path="/history/:id" component={History} />
           <Route exact path="/setting" component={(props) => <Setting id={id} />}/>
           <Route exact path="/about" component={About} />
           {
             (requiredProfilInfo === true ) ?
-            <Route exact path="/" component={About}  />
+            <Route exact path="/" render={(props) => <Browsing id={id} />} />
             :
-            <Route exact path="/" render={(props) => <Home id={id} />} />
+            <Route exact path="/*" render={(props) => <Home id={id} />} />
           }
         </Switch>
       </main>

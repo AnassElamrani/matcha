@@ -33,8 +33,11 @@ module.exports = class Tag {
     ])
   }
 
-  static cmpIdTag(idTag) {
-    return db.execute('SELECT * FROM tag_user WHERE tag_id = ?', [idTag])
+  static cmpIdTag(id) {
+    return db.execute(
+      'SELECT t.name FROM tag_user tu INNER JOIN tag t on tu.tag_id = t.id WHERE users_id = ?',
+      [id]
+    )
   }
   static getAllTag(id) {
     return db.execute('SELECT * FROM tag WHERE id = ?', [id])

@@ -10,6 +10,7 @@ const passport = require('passport');
 route.post("/user/userInfoVerification", userController.userInfoVerification);
 
 
+
 // get signUp
 route.get('/users/signup'); // .....
 

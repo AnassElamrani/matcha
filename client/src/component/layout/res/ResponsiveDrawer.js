@@ -20,15 +20,17 @@ import {
   // Badge
 } from "@material-ui/core"
 import {
-  Menu as MenuIcon,
+  Menu as MenuIcon, Chat,
   // LocationOn
 } from "@material-ui/icons"
 import { makeStyles, useTheme } from "@material-ui/core/styles"
 import { FaHome, FaInfoCircle, FaHistory, FaHotjar, FaRegSun } from "react-icons/fa"
+import { AiFillMessage } from "react-icons/ai";
 import { RiLogoutCircleLine } from "react-icons/ri"
 import { MdAccountCircle } from "react-icons/md"
 
 import About from "./About"
+import ChatList from "../../chat/ChatList"
 import Browsing from "../../browsing/browsing"
 import Home from "../../profil/Home"
 import EditProfil from "../../profil/editProfill"
@@ -162,6 +164,15 @@ const ResponsiveDrawer = (props) => {
       if (id) Axios.post(`base/localisation/${id}`, { lat: lat, long: long });
   }, [id, lat, long, getLocIp]);
 
+  // Chat //////////////////////////////////////////////////////////////////////
+
+
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  
   const handelLogout = () => {
     instance.post("http://localhost:3001/logout");
     props.logout();
@@ -211,6 +222,13 @@ const ResponsiveDrawer = (props) => {
     },
     {
       id: 6,
+      text: 'Chat',
+      icon: <AiFillMessage />,
+      onClick: () => history.push('/chat'),
+      disabled: !requiredProfilInfo,
+    },
+    {
+      id: 7,
       text: 'About',
       icon: <FaInfoCircle />,
       onClick: () => history.push('/about'),
@@ -237,8 +255,8 @@ const ResponsiveDrawer = (props) => {
           if (!hidden) {
             return (
               <ListItem button key={id} disabled={disabled} onClick={onClick}>
-                <ListItemText key={id + Math.random()} primary={text} />
-                {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                <ListItemText style={{color: "purple"}} key={id + Math.random()} primary={text} />
+                {icon && <ListItemIcon style={{color: "purple"}}>{icon}</ListItemIcon>}
               </ListItem>
             )
           }
@@ -322,6 +340,7 @@ const ResponsiveDrawer = (props) => {
         <div className={classes.toolbar} />
         <Switch>
           <Route exact path='/edit/:id' component={EditProfil} />
+          <Route exact path='/chat' component={ChatList} />
           <Route
             exact
             path='/browsing/:id'

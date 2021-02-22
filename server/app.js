@@ -2,6 +2,7 @@ const bodyParser = require("body-parser")
 const userRoutes = require("./routes/user")
 const errRoutes = require("./routes/error")
 const homeRoutes = require('./routes/base')
+const chatRoutes = require('./routes/chat');
 const browsingRoutes = require('./routes/browsing')
 const cookieParser = require('cookie-parser')
 const authRoutes = require("./routes/auth")
@@ -39,5 +40,6 @@ app.use(homeRoutes)
 app.use(browsingRoutes)
 app.use(userRoutes)
 app.use(errRoutes)
+app.use('/chat', chatRoutes);
 
 app.listen(3001)

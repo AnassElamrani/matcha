@@ -28,7 +28,7 @@ module.exports = class Like {
   }
 
   static addToTableMatch(data) {
-    return db.execute('INSERT INTO matchs(`liker`, `liked`) VALUES(?, ?)', [
+    return db.execute('INSERT INTO matchs(`user1`, `user2`) VALUES(?, ?)', [
       data.idLiker,
       data.idLiked,
     ])

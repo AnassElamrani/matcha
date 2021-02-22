@@ -256,8 +256,8 @@ INSERT INTO `location` (`id`, `users_id`, `city`, `lat`, `long`) VALUES
 
 CREATE TABLE `matchs` (
   `id` int NOT NULL,
-  `liker` int NOT NULL,
-  `liked` int NOT NULL,
+  `user1` int NOT NULL,
+  `user2` int NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

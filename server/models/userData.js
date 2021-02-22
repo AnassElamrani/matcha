@@ -200,4 +200,9 @@ module.exports = class User {
   {
     return db.execute('SELECT image FROM imgProfil WHERE users_id = ? AND pointer = 0', [userId]);
   }
+
+  // static canChatWith(userId)
+  // {
+  //   return ()
+  // }
 }

@@ -78,10 +78,11 @@ const Search = (props) => {
 
   const handleClose = (e) => {
     setOpen(false)
+    setTag1([])
   }
 
   const handelDone = (e) => {
-    setOpen(false)
+    handleClose()
   }
   // A age gap. • A “fame rating” gap. • A location. • One or multiple interests tags.
   // next search with a new autocomplete for tag */
@@ -134,7 +135,8 @@ const Search = (props) => {
         Search
       </Button>
       <Dialog
-        // fullScreen
+        fullWidth
+        maxWidth='sm'
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
         open={open}
@@ -186,8 +188,8 @@ const Search = (props) => {
             id='size-small-filled-multi'
             size='small'
             options={tag}
-            // getOptionSelected={(option) => option.name}
             onChange={handleTag}
+            getOptionSelected={(option) => option.key === 0}
             getOptionLabel={(option) => option.name}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
@@ -208,12 +210,22 @@ const Search = (props) => {
               />
             )}
           />
-          <Button autoFocus onClick={kit3awad} color='secondary'>
+          <Button
+            autoFocus
+            onClick={kit3awad}
+            color='secondary'
+            variant='outlined'
+          >
             Search gab
           </Button>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handelDone} color='primary'>
+          <Button
+            autoFocus
+            onClick={handelDone}
+            color='primary'
+            variant='outlined'
+          >
             Done
           </Button>
         </DialogActions>

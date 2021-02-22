@@ -44,7 +44,9 @@ const Init = (props) => {
   });
   return (
     <ThemeProvider theme={darkTheme}>
-      {loggedin === true && <ResponsiveDrawer logout={logout} />}
+      {loggedin === true && (
+        <ResponsiveDrawer logout={logout} loggedin={loggedin} />
+      )}
       {loggedin === false && (
         <Switch>
           <Route exact path='/Sign-up' component={Signup} />

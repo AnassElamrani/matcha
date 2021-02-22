@@ -290,15 +290,26 @@ exports.intraCallback = (req, res, next) => {
 // Controller to check if The user Filled all the required personal Informations
 
 exports.userInfoVerification = async (req, res) => {
-  console.log('ooooo')
   var id = req.body.userId;
   await User.CheckRequiredUserInfo(id).then((response) => {
     if(response[0] != undefined && response[0].length != 0)
-    res.json({status: true});
+      res.json({status: true});
     else 
-    res.json({status: false});
-    console.log('response', response[0])
-    // res.json({flag: "wewewewe"})
+      res.json({status: false});
   })
   .catch(err => console.log('checkReuired..Error', err));
 };
+
+// get Avatar
+
+exports.Avatar = async (req, res) => {
+  // res.json({test : req.body.userId})
+  var userId = req.body.userId;
+  await User.Avatar(userId).then((response) => {
+    if(response[0][0])
+    {
+      var obj = response[0][0];
+      res.json({image : obj.image})
+    }
+  }).catch((err) => console.log(err));
+}

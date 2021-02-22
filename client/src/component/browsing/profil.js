@@ -6,7 +6,7 @@ import { Button, Dialog, Typography, IconButton, CardMedia } from '@material-ui/
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import CloseIcon from '@material-ui/icons/Close';
+import { Close as CloseIcon, More as MoreIcon } from '@material-ui/icons'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import { Carousel } from 'react-responsive-carousel'
 
@@ -70,15 +70,14 @@ const CustomizedDialogs = (props) => {
 
     return (
       <React.Fragment>
-        <Button
-          variant='outlined'
-          color='primary'
+        <div
+          role='button'
           onClick={(event) =>
             handleClickOpen(event, props.visitor, props.visited)
           }
         >
-          Show profil
-        </Button>
+          <MoreIcon color='primary' />
+        </div>
         <Dialog
           fullWidth
           maxWidth='sm'

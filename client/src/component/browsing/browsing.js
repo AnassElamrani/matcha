@@ -22,8 +22,7 @@ import {
 } from '@material-ui/core'
 import {
   Favorite,
-  NotInterested,
-  // ExpandMore,
+  ThumbDown as ThumbDownIcon
 } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
@@ -80,6 +79,7 @@ const Browsing = (props) => {
         cord: cord,
         gender: gender,
       }).then((res) => {
+        console.log(res.data)
         if (res.data){
           setList(res.data)
           setList1(res.data)  
@@ -91,7 +91,7 @@ const Browsing = (props) => {
   const handelLike = (event, idLiker, idLiked) => {
     event.preventDefault()
     Axios.post(`/browsing/likes/${idLiker}`, {idLiked: idLiked}).then(res => {
-      console.log(res)
+      console.log(res.data)
       if (res.data.status) {
         const newList = list1.filter((item) => item.id !== idLiked)
         setList1(newList)
@@ -117,10 +117,10 @@ const Browsing = (props) => {
         justify='center'
         alignItems='center'
       >
-        <Grid iterm xs={12} sm={2}>
+        <Grid item xs={12} sm={2}>
           <SortComponent setList={setList1} list={list1} />
         </Grid>
-        <Grid iterm xs={12} sm={2}>
+        <Grid item xs={12} sm={2}>
           <Map list={list1} />
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -142,8 +142,8 @@ const Browsing = (props) => {
                 .map((el, key) => {
                   const imageProfil = el.images.split(',')
                   return (
-                    <Box m={2}>
-                      <Card key={key} className={classes.root}>
+                    <Box m={2} key={key}>
+                      <Card className={classes.root}>
                         <CardHeader
                           avatar={
                             <Avatar
@@ -181,7 +181,7 @@ const Browsing = (props) => {
                               handelLike(event, props.id, el.id)
                             }
                           >
-                            <Favorite />
+                            <Favorite style={{ color: 'green' }} />
                           </IconButton>
                           <IconButton
                             className={clsx(classes.expand)}
@@ -190,15 +190,14 @@ const Browsing = (props) => {
                               handelDeslike(event, props.id, el.id)
                             }
                           >
-                            <NotInterested />
+                            <ThumbDownIcon color='secondary' />
                           </IconButton>
                         </CardActions>
                       </Card>
                     </Box>
                   )
                 })
-                // .splice(0,20)
-                }
+                .splice(0, 20)}
           </Grid>
         </Container>
       </Grid>

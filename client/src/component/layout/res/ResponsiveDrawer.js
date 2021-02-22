@@ -4,6 +4,7 @@ import { withRouter, Switch, Route } from "react-router-dom"
 import PropTypes from "prop-types"
 import "../../../start/styles.css"
 import {
+  Avatar, 
   Typography,
   Toolbar,
   AppBar,
@@ -27,13 +28,12 @@ import { FaHome, FaInfoCircle, FaHistory, FaHotjar, FaRegSun } from "react-icons
 import { RiLogoutCircleLine } from "react-icons/ri"
 import { MdAccountCircle } from "react-icons/md"
 
-import { About } from "./About"
+import About from "./About"
 import Browsing from "../../browsing/browsing"
 import Home from "../../profil/Home"
 import EditProfil from "../../profil/editProfill"
 import Setting from "../../profil/setting"
 import History from "../../history/history"
-import ImgTest from "../../browsing/fetchImg"
 
 const instance = Axios.create({ withCredentials: true });
 
@@ -85,8 +85,8 @@ const ResponsiveDrawer = (props) => {
   const [id, setId] = React.useState("");
   const [lat, setLat] = React.useState(false);
   const [long, setLong] = React.useState(false);
-  const [requiredProfilInfo, setRPI] = React.useState("");
-  const [route, setRoute] = React.useState('/');
+  const [requiredProfilInfo, setRPI] = React.useState('');
+  const [avatar, setAvatar] = React.useState('');
 
   navigator.geolocation.getCurrentPosition((position) => {
     setLat(position.coords.latitude);
@@ -94,38 +94,56 @@ const ResponsiveDrawer = (props) => {
   });
 
   const func = async () => {
-    await instance
-    .get("http://localhost:3001/base")
-    .then((response) => {
-      console.log('Id from response ----->', response.data.user.id)
-      if (response.data.user.id !== undefined) {
-        setId(response.data.user.id);
+    if (props.loggedin){
+      await instance.get('http://localhost:3001/base').then(
+        (response) => {
+          if (response.data.user.id !== undefined) {
+            setId(response.data.user.id)
+          }
+        },
+        (err) => {}
+      )
+      if (id !== '') {
+        instance
+          .post('http://localhost:3001/user/userInfoVerification', { userId: id })
+          .then(
+            (res) => {
+              if (res.data.status === true) {
+                setRPI(true)
+              } else setRPI(false)
+            },
+            (err) => {}
+          )
       }
-    }, (err) => {})
-    if (id !== "") {
-      console.log('id', id)
-      instance.post("http://localhost:3001/user/userInfoVerification", { userId: id })
-      .then((res) => {
-        if (res.data.status === true) {
-          setRPI(true)
-        }
-        else
-        setRPI(false)
-      }, (err) => {})
     }
   }
-  
+
   React.useEffect(() => {
-    func();
-    console.log('Myuseffect')
-    if(requiredProfilInfo)
-    console.log('RPI', requiredProfilInfo);
-  });
+      func()
+  })
+
+  React.useEffect(() => {
+    // Get Profile Img (for avatar)
+    if(id)
+    {
+      console.log('avatar', avatar);
+      Axios.post('http://localhost:3001/user/getUserAvatar', {userId: id})
+      .then((res) => {
+        console.log(res);
+        if(res.data.image)
+        {
+          setAvatar(res.data.image);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+  })
 
   const getLocIp = React.useCallback(() => {
     // get locallization with help of ip
     Axios.get('https://api.ipify.org?format=json').then(async (res) => {
-      // console.log(res.data.ip)
       await Axios.get(`http://ip-api.com/json/${res.data.ip}`).then(res => {
         console.log(res.data)
         setLat(res.data.lat);
@@ -154,50 +172,54 @@ const ResponsiveDrawer = (props) => {
   };
 
   const itemsListOne = [
-    { text: "Home", icon: <FaHome />, onClick: () => history.push("/"),
-    hidden: true,
-    disabled: requiredProfilInfo },
     {
-      text: "browsing",
+      id: 0,
+      text: 'Home',
+      icon: <FaHome />,
+      onClick: () => history.push('/'),
+      hidden: true,
+      disabled: requiredProfilInfo,
+    },
+    {
+      id: 1,
+      text: 'browsing',
       icon: <FaHotjar />,
       onClick: () => history.push(`/browsing/${id}`),
       disabled: !requiredProfilInfo,
-      
     },
     {
-      text: "ImgTest",
-      icon: <FaHotjar />,
-      onClick: () => history.push(`/ImgTest/${id}`),
-      disabled: !requiredProfilInfo
-    },
-    {
-      text: "Profile",
+      id: 3,
+      text: 'Profile',
       icon: <MdAccountCircle />,
       onClick: () => history.push(`/edit/${id}`),
-      disabled: !requiredProfilInfo
+      disabled: !requiredProfilInfo,
     },
     {
-      text: "History",
+      id: 4,
+      text: 'History',
       icon: <FaHistory />,
       onClick: () => history.push(`/history/${id}`),
-      disabled: !requiredProfilInfo
+      disabled: !requiredProfilInfo,
     },
-    
+
     {
-      text: "Setting",
+      id: 5,
+      text: 'Setting',
       icon: <FaRegSun />,
-      onClick: () => history.push("/setting"),
-      disabled: !requiredProfilInfo
+      onClick: () => history.push('/setting'),
+      disabled: !requiredProfilInfo,
     },
     {
-      text: "About",
+      id: 6,
+      text: 'About',
       icon: <FaInfoCircle />,
-      onClick: () => history.push("/about"),
-      disabled: !requiredProfilInfo
+      onClick: () => history.push('/about'),
+      disabled: !requiredProfilInfo,
     },
-  ];
+  ]
   const itemsListTwo = [
     {
+      id: 100,
       text: "Logout",
       icon: <RiLogoutCircleLine />,
       onClick: () => {
@@ -209,35 +231,34 @@ const ResponsiveDrawer = (props) => {
     <div>
       <div className={classes.toolbar} />
       <Divider />
-      <List>
+      <List key={Math.random()}>
         {itemsListOne.map((item, index) => {
-          const { text, icon, onClick, disabled, hidden } = item;
-          if(!hidden)
-          {
-
+          const { id, text, icon, onClick, disabled, hidden } = item
+          if (!hidden) {
             return (
-              <ListItem button key={text} disabled={disabled} onClick={onClick}>
-              <ListItemText primary={text} />
-              {icon && <ListItemIcon>{icon}</ListItemIcon>}
-            </ListItem>
-          );
-        }
+              <ListItem button key={id} disabled={disabled} onClick={onClick}>
+                <ListItemText key={id + Math.random()} primary={text} />
+                {icon && <ListItemIcon>{icon}</ListItemIcon>}
+              </ListItem>
+            )
+          }
+          return <React.Fragment key={Math.random()}></React.Fragment>
         })}
       </List>
       <Divider />
-      <List>
+      <List key={Math.random()}>
         {itemsListTwo.map((item, index) => {
-          const { text, icon, onClick } = item;
+          const { id, text, icon, onClick } = item
           return (
-            <ListItem button key={text} onClick={onClick}>
-              <ListItemText primary={text} />
+            <ListItem button key={id} onClick={onClick}>
+              <ListItemText key={id + Math.random()} primary={text} />
               {icon && <ListItemIcon>{icon}</ListItemIcon>}
             </ListItem>
-          );
+          )
         })}
       </List>
     </div>
-  );
+  )
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -245,47 +266,52 @@ const ResponsiveDrawer = (props) => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position='fixed' className={classes.appBar}>
         <Toolbar>
           <IconButton
-            color="secondary"
-            aria-label="open drawer"
-            edge="start"
+            color='secondary'
+            aria-label='open drawer'
+            edge='start'
             onClick={handleDrawerToggle}
             className={classes.menuButton}
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.ty} variant="h6" noWrap>
-            Matcha
+          <Typography className={classes.ty} variant='h6' noWrap>
+            matcha
           </Typography>
+          {
+            (1 === 2) ?
+            <Avatar alt="Username" src={`http://localhost:3001/${avatar}`}/>
+            :
+            <Avatar alt="?" src={`http://localhost:3001/${avatar}`}/>
+          }
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
+      <nav className={classes.drawer} aria-label='mailbox folders'>
+        <Hidden smUp implementation='css'>
           <Drawer
             container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
+            variant='temporary'
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={mobileOpen}
             onClose={handleDrawerToggle}
             classes={{
               paper: classes.drawerPaper,
             }}
             ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
+              keepMounted: true
             }}
           >
             {drawer}
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation='css'>
           <Drawer
             classes={{
               paper: classes.drawerPaper,
             }}
-            variant="permanent"
+            variant='permanent'
             open
           >
             {drawer}
@@ -295,29 +321,31 @@ const ResponsiveDrawer = (props) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
-          <Route exact path="/edit/:id" component={EditProfil} />
-          <Route exact path="/browsing/:id" render={(props) => <Browsing id={id} />} />
-          <Route exact path="/ImgTest/:id" render={(props) => <ImgTest id={id} />} />
-          <Route exact path="/history/:id" component={History} />
-          <Route exact path="/setting" component={(props) => <Setting id={id} />}/>
-          <Route exact path="/about" component={About} />
-          {
-            (requiredProfilInfo === true ) ?
-            <Route exact path="/" render={(props) => <Browsing id={id} />} />
-            :
-            <Route exact path="/*" render={(props) => <Home id={id} />} />
-          }
+          <Route exact path='/edit/:id' component={EditProfil} />
+          <Route
+            exact
+            path='/browsing/:id'
+            render={(props) => <Browsing id={id} />}
+          />
+          <Route exact path='/history/:id' component={History} />
+          <Route
+            exact
+            path='/setting'
+            component={(props) => <Setting id={id} />}
+          />
+          <Route exact path='/about' component={About} />
+          {requiredProfilInfo === true ? (
+            <Route exact path='/' render={(props) => <Browsing id={id} />} />
+          ) : (
+            <Route exact path='/*' render={(props) => <Home id={id} />} />
+          )}
         </Switch>
       </main>
     </div>
-  );
+  )
 };
 
 ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window: PropTypes.func,
 };
 

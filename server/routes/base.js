@@ -44,6 +44,10 @@ route.post(
   homeController.fillProfil
 );
 
+// status profil
+
+route.post('/base/status/:id', homeController.changeStatus)
+
 // add img
 
 route.post('/base/img/:id', homeController.multerUpload)

@@ -1,12 +1,13 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { Button, Dialog, Typography, IconButton } from '@material-ui/core'
 import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-} from 'react-leaflet'
+  Button,
+  Dialog,
+  Typography,
+  IconButton,
+  Avatar
+} from '@material-ui/core'
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import MuiDialogActions from '@material-ui/core/DialogActions'
@@ -76,8 +77,7 @@ const Map = (props) => {
   }
 
     React.useEffect(() => {
-        if (props.list[0])
-            setPosition([props.list[0].lat, props.list[0].long])
+      if (props.list[0]) setPosition([props.list[0].lat, props.list[0].long])
     }, [props.list])
 
 
@@ -90,6 +90,8 @@ const Map = (props) => {
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
         open={open}
+        fullWidth
+        maxWidth='lg'
       >
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
           Maps
@@ -102,23 +104,38 @@ const Map = (props) => {
               url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
-            {props.list && props.list.map((el) => {
+            {props.list &&
+              props.list.map((el) => {
+                const imageProfil = el.images.split(',')
                 return (
-                  <Marker key={el.id} position={[el.long, el.lat]}>
+                  <Marker key={el.id} position={[el.lat, el.long]}>
                     <Popup>
-                      <Typography color="primary">
-                        {el.userName +
-                          ' from ' +
-                          el.city}
+                      <Avatar
+                        aria-label='recipe'
+                        src={`http://localhost:3001/${imageProfil[0]}`}
+                        alt={`test${imageProfil[0]}`}
+                      ></Avatar>
+                      <Typography color='primary'>
+                        {el.userName + ' from ' + el.city}
                       </Typography>
                     </Popup>
                   </Marker>
                 )
-            })}
+              })}
+            <Circle
+              center={position}
+              pathOptions={{ color: 'red' }}
+              radius={80000}
+            />
           </MapContainer>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handelDone} color='primary'>
+          <Button
+            autoFocus
+            onClick={handelDone}
+            color='primary'
+            variant='outlined'
+          >
             Done
           </Button>
         </DialogActions>

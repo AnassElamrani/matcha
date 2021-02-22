@@ -53,6 +53,7 @@ const HorizontalLinearStepper = (props) => {
   };
 
   const handleDone = (e, id) => {
+    Axios.post(`/base/status/${id}`)
     history.push(`/edit/${id}`)
   }
 

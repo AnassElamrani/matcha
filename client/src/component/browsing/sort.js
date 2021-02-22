@@ -23,7 +23,7 @@ const SortComponent = (props) => {
           }
       })
       console.log(newList1)
-        props.setList(newList1)
+      props.setList(newList1)
     }
 
 

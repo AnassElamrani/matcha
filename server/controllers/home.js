@@ -129,6 +129,22 @@ exports.fillProfil = async (req, res, next) => {
   }
 };
 
+// change status done
+
+exports.changeStatus = async (req, res) => {
+  const { id } = req.params
+  await User.CheckRequiredUserInfo(id)
+  .then((response) => {
+    if (response[0] != undefined && response[0].length != 0){
+      // update status 2
+      User.UpdateStatusUser(id)
+      res.json({ status: true })
+    }
+    else res.json({ status: false })
+  })
+  .catch((err) => console.log('checkReuired..Error', err))
+}
+
 exports.tags = async (req, res) => {
   var data = {};
   await Tag.getAllTag(req.params.id).then(([res]) => {

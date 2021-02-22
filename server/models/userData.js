@@ -191,4 +191,13 @@ module.exports = class User {
       [userId]
     )
   }
+  
+  static UpdateStatusUser(userId) {
+    return db.execute('UPDATE users SET status = 2 WHERE id = ?', [userId])
+  }
+
+  static Avatar(userId)
+  {
+    return db.execute('SELECT image FROM imgProfil WHERE users_id = ? AND pointer = 0', [userId]);
+  }
 }

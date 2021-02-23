@@ -20,7 +20,7 @@ import {
   // Badge
 } from "@material-ui/core"
 import {
-  Menu as MenuIcon, Chat,
+  Menu as MenuIcon
   // LocationOn
 } from "@material-ui/icons"
 import { makeStyles, useTheme } from "@material-ui/core/styles"
@@ -30,7 +30,7 @@ import { RiLogoutCircleLine } from "react-icons/ri"
 import { MdAccountCircle } from "react-icons/md"
 
 import About from "./About"
-import ChatList from "../../chat/ChatList"
+import Chat from "../../chat/Chat"
 import Browsing from "../../browsing/browsing"
 import Home from "../../profil/Home"
 import EditProfil from "../../profil/editProfill"
@@ -128,10 +128,10 @@ const ResponsiveDrawer = (props) => {
     // Get Profile Img (for avatar)
     if(id)
     {
-      console.log('avatar', avatar);
+      // console.log('avatar', avatar);
       Axios.post('http://localhost:3001/user/getUserAvatar', {userId: id})
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if(res.data.image)
         {
           setAvatar(res.data.image);
@@ -164,15 +164,7 @@ const ResponsiveDrawer = (props) => {
       if (id) Axios.post(`base/localisation/${id}`, { lat: lat, long: long });
   }, [id, lat, long, getLocIp]);
 
-  // Chat //////////////////////////////////////////////////////////////////////
 
-
-
-
-
-  //////////////////////////////////////////////////////////////////////////////
-
-  
   const handelLogout = () => {
     instance.post("http://localhost:3001/logout");
     props.logout();
@@ -340,7 +332,11 @@ const ResponsiveDrawer = (props) => {
         <div className={classes.toolbar} />
         <Switch>
           <Route exact path='/edit/:id' component={EditProfil} />
-          <Route exact path='/chat' component={ChatList} />
+          <Route
+            exact
+            path='/chat'
+            render={(props) => <Chat id={id} />}
+          />
           <Route
             exact
             path='/browsing/:id'

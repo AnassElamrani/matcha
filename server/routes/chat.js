@@ -6,9 +6,6 @@ const chatController = require("../controllers/chat");
 const express = require("express");
 const route = express.Router();
 
-route.get('/sayHello', (req, res, next) => {
-    res.json({msg: 'hello'});
-    next();
-}, chatController.Test)
+route.post('/people', chatController.people)
 
 module.exports = route;
